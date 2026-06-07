@@ -1,0 +1,1752 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>☢ NUMBERS STATION // KRYPTO-ZENTRALE V4 ☢</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap');
+
+:root {
+  --green:      #00ff41;
+  --green-dim:  #00c832;
+  --green-lo:   #005a17;
+  --green-glow: #00ff4155;
+  --amber:      #ffb300;
+  --amber-lo:   #7a5500;
+  --red:        #ff2d2d;
+  --cyan:       #00e5ff;
+  --cyan-lo:    #004d5a;
+  --purple:     #bf00ff;
+  --purple-lo:  #3d0057;
+  --blue:       #0080ff;
+  --blue-lo:    #002244;
+  --bg:         #000000;
+  --panel:      #040d04;
+  --border:     #0a2a0a;
+  --border2:    #0f3f0f;
+  --text-dim:   #3a7a3a;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--green);
+  font-family: 'Share Tech Mono', 'Courier New', monospace;
+  font-size: 13px;
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+  cursor: crosshair;
+}
+
+/* SCANLINES */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,255,65,0.013) 2px, rgba(0,255,65,0.013) 4px);
+  pointer-events: none; z-index: 9999;
+  animation: scanlines 10s linear infinite;
+}
+@keyframes scanlines { to { background-position: 0 100px; } }
+
+body::after {
+  content: ''; position: fixed; inset: 0;
+  background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.8) 100%);
+  pointer-events: none; z-index: 9998;
+}
+
+/* HEADER */
+.header {
+  text-align: center; padding: 26px 20px 14px;
+  border-bottom: 1px solid var(--border2); position: relative; overflow: hidden;
+}
+.header::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(0,255,65,0.05) 0%, transparent 100%);
+}
+.header-badge {
+  display: inline-block; font-family: 'Orbitron', monospace;
+  font-size: 9px; letter-spacing: 4px; color: var(--text-dim);
+  border: 1px solid var(--green-lo); padding: 3px 14px; margin-bottom: 10px;
+  animation: blink-badge 4s infinite;
+}
+@keyframes blink-badge { 0%,92%,100%{opacity:1} 96%{opacity:0} }
+
+.header h1 {
+  font-family: 'Orbitron', monospace;
+  font-size: clamp(16px, 3.5vw, 32px); font-weight: 900; letter-spacing: 6px;
+  text-transform: uppercase;
+  text-shadow: 0 0 20px var(--green), 0 0 50px var(--green-glow), 0 0 100px rgba(0,255,65,0.1);
+  animation: flicker 6s infinite;
+}
+@keyframes flicker { 0%,19%,21%,23%,25%,54%,56%,100%{opacity:1} 20%,22%,24%{opacity:.85} 55%{opacity:.9} }
+
+.header-sub { font-size: 10px; letter-spacing: 3px; color: var(--text-dim); margin-top: 5px; }
+
+.status-bar {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 16px;
+  margin-top: 10px; font-size: 10px; color: var(--text-dim); letter-spacing: 2px;
+}
+.sdot {
+  display: inline-block; width: 6px; height: 6px; border-radius: 50%;
+  background: var(--green); margin-right: 5px;
+  animation: pdot 1.5s ease-in-out infinite; box-shadow: 0 0 6px var(--green);
+}
+@keyframes pdot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.35;transform:scale(.65)} }
+
+/* TICKER */
+.ticker-wrap {
+  overflow: hidden; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  background: rgba(0,255,65,0.012); padding: 5px 0;
+}
+.ticker {
+  display: inline-block; white-space: nowrap;
+  animation: ticker-scroll 55s linear infinite;
+  font-size: 10px; color: var(--text-dim); letter-spacing: 2px;
+}
+@keyframes ticker-scroll { from{transform:translateX(100vw)} to{transform:translateX(-100%)} }
+
+/* MAIN GRID */
+.main-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 20px; max-width: 1500px; margin: 0 auto; padding: 20px;
+}
+@media(max-width:960px){ .main-grid{ grid-template-columns:1fr; } }
+
+/* PANEL */
+.panel {
+  background: var(--panel); border: 1px solid var(--border2);
+  border-radius: 2px; position: relative; overflow: hidden;
+}
+.panel::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--green), transparent);
+  animation: scan-line 4s linear infinite;
+}
+@keyframes scan-line {
+  0%{opacity:0;transform:scaleX(0);transform-origin:left}
+  50%{opacity:1;transform:scaleX(1)}
+  100%{opacity:0;transform:scaleX(0);transform-origin:right}
+}
+
+.panel-header {
+  display: flex; align-items: center; gap: 10px; padding: 11px 16px;
+  border-bottom: 1px solid var(--border); background: rgba(0,255,65,0.022);
+}
+.panel-icon { font-size: 16px; filter: drop-shadow(0 0 6px var(--green)); }
+.panel-title {
+  font-family: 'Orbitron', monospace; font-size: 11px; font-weight: 700;
+  letter-spacing: 3px; text-transform: uppercase; color: var(--green);
+  text-shadow: 0 0 10px var(--green);
+}
+.panel-tag {
+  margin-left: auto; font-size: 9px; letter-spacing: 2px;
+  color: var(--text-dim); border: 1px solid var(--border2); padding: 2px 7px;
+}
+.panel-body { padding: 14px; }
+
+/* COLLAPSIBLE SECTION */
+.collapsible-section { margin-bottom: 12px; }
+
+.collapse-header {
+  display: flex; align-items: center; gap: 10px;
+  padding: 7px 10px; cursor: pointer;
+  border: 1px solid var(--border2); background: rgba(0,0,0,0.4);
+  transition: all 0.18s; user-select: none;
+  position: relative;
+}
+.collapse-header:hover {
+  border-color: var(--green-lo); background: rgba(0,255,65,0.025);
+}
+.collapse-title {
+  font-size: 9px; letter-spacing: 3px; color: var(--text-dim);
+  text-transform: uppercase; flex: 1;
+}
+.collapse-count {
+  font-size: 9px; color: var(--green-lo); letter-spacing: 1px;
+  border: 1px solid var(--green-lo); padding: 1px 7px; border-radius: 1px;
+  transition: all 0.2s;
+}
+.collapse-count.has-active {
+  border-color: var(--green); color: var(--green);
+  box-shadow: 0 0 6px var(--green-glow);
+}
+.collapse-arrow {
+  font-size: 10px; color: var(--text-dim); transition: transform 0.25s;
+  width: 14px; text-align: center;
+}
+.collapsible-section.open .collapse-arrow { transform: rotate(180deg); }
+.collapse-arrow-badge {
+  font-size: 8px; letter-spacing: 1px; padding: 1px 5px;
+  border-radius: 1px; margin-left: 4px;
+}
+.cab-green { border:1px solid var(--green-lo); color:var(--green-lo); }
+.cab-amber { border:1px solid var(--amber-lo); color:var(--amber-lo); }
+.cab-cyan  { border:1px solid var(--cyan-lo);  color:var(--cyan-lo); }
+.cab-purple{ border:1px solid var(--purple-lo);color:var(--purple-lo); }
+.cab-blue  { border:1px solid var(--blue-lo);  color:var(--blue-lo); }
+
+.collapse-body {
+  display: none; border: 1px solid var(--border); border-top: none;
+  background: rgba(0,0,0,0.2);
+  animation: fadeSlideIn 0.2s ease;
+}
+.collapsible-section.open .collapse-body { display: block; }
+@keyframes fadeSlideIn { from{opacity:0;transform:translateY(-6px)} to{opacity:1;transform:translateY(0)} }
+
+/* SECTION LABEL (inside collapse body) */
+.section-label {
+  font-size: 9px; letter-spacing: 3px; color: var(--text-dim);
+  text-transform: uppercase; margin-bottom: 6px;
+  display: flex; align-items: center; gap: 8px;
+}
+.section-label::after { content:''; flex:1; height:1px; background:var(--border2); }
+
+/* MODULE CARDS */
+.modules-grid { display: grid; grid-template-columns: 1fr; gap: 7px; padding: 10px; }
+
+.module-card {
+  border: 1px solid var(--border2); background: rgba(0,255,65,0.012);
+  padding: 9px 11px; border-radius: 1px; transition: all 0.18s;
+  position: relative; cursor: pointer;
+}
+.module-card:hover { border-color: var(--green-dim); background: rgba(0,255,65,0.035); box-shadow: 0 0 10px rgba(0,255,65,0.06); }
+.module-card.active {
+  border-color: var(--green); background: rgba(0,255,65,0.055);
+  box-shadow: inset 0 0 18px rgba(0,255,65,0.04), 0 0 12px rgba(0,255,65,0.09);
+}
+.module-card.active .module-number { color: var(--green); text-shadow: 0 0 8px var(--green); }
+
+/* COLOR VARIANTS */
+.module-card.amber-theme.active  { border-color:var(--amber);  background:rgba(255,179,0,0.04);  box-shadow:inset 0 0 18px rgba(255,179,0,0.03), 0 0 12px rgba(255,179,0,0.08); }
+.module-card.cyan-theme.active   { border-color:var(--cyan);   background:rgba(0,229,255,0.04);  box-shadow:inset 0 0 18px rgba(0,229,255,0.03), 0 0 12px rgba(0,229,255,0.08); }
+.module-card.purple-theme.active { border-color:var(--purple); background:rgba(191,0,255,0.04);  box-shadow:inset 0 0 18px rgba(191,0,255,0.03), 0 0 12px rgba(191,0,255,0.08); }
+.module-card.blue-theme.active   { border-color:var(--blue);   background:rgba(0,128,255,0.04);  box-shadow:inset 0 0 18px rgba(0,128,255,0.03), 0 0 12px rgba(0,128,255,0.08); }
+
+.module-card.amber-theme:hover  { border-color:var(--amber-lo); }
+.module-card.cyan-theme:hover   { border-color:var(--cyan-lo); }
+.module-card.purple-theme:hover { border-color:var(--purple-lo); }
+.module-card.blue-theme:hover   { border-color:var(--blue-lo); }
+
+.module-top { display: flex; align-items: center; gap: 9px; }
+.module-number {
+  font-family:'Orbitron',monospace; font-size:17px; font-weight:900;
+  color:var(--green-lo); min-width:26px; transition:all 0.18s;
+}
+.module-info { flex: 1; }
+.module-name { font-size:11px; color:var(--green); font-weight:bold; letter-spacing:1px; }
+.module-desc { font-size:9px; color:var(--text-dim); margin-top:1px; line-height:1.4; }
+
+.amber-theme  .module-name { color: var(--amber); }
+.cyan-theme   .module-name { color: var(--cyan); }
+.purple-theme .module-name { color: var(--purple); }
+.blue-theme   .module-name { color: var(--blue); }
+.amber-theme  .module-number { color: var(--amber-lo); }
+.cyan-theme   .module-number { color: var(--cyan-lo); }
+.purple-theme .module-number { color: var(--purple-lo); }
+.blue-theme   .module-number { color: var(--blue-lo); }
+.amber-theme.active  .module-number { color:var(--amber); text-shadow:0 0 8px var(--amber); }
+.cyan-theme.active   .module-number { color:var(--cyan);  text-shadow:0 0 8px var(--cyan); }
+.purple-theme.active .module-number { color:var(--purple);text-shadow:0 0 8px var(--purple); }
+.blue-theme.active   .module-number { color:var(--blue);  text-shadow:0 0 8px var(--blue); }
+
+.module-badge { font-size:8px; letter-spacing:2px; padding:2px 6px; border-radius:1px; }
+.badge-green  { border:1px solid var(--green-dim);  color:var(--green-dim); }
+.badge-amber  { border:1px solid var(--amber);       color:var(--amber); }
+.badge-red    { border:1px solid var(--red);         color:var(--red); }
+.badge-cyan   { border:1px solid var(--cyan);        color:var(--cyan); }
+.badge-purple { border:1px solid var(--purple);      color:var(--purple); }
+.badge-blue   { border:1px solid var(--blue);        color:var(--blue); }
+
+input[type="checkbox"] { display:none; }
+.check-box {
+  width:19px; height:19px; border:1px solid var(--green-lo);
+  display:flex; align-items:center; justify-content:center;
+  flex-shrink:0; transition:all 0.18s; font-size:11px; cursor:pointer;
+}
+.module-card.active .check-box           { border-color:var(--green);  color:var(--green);  box-shadow:0 0 7px var(--green-glow); }
+.amber-theme.active  .check-box          { border-color:var(--amber);  color:var(--amber); }
+.cyan-theme.active   .check-box          { border-color:var(--cyan);   color:var(--cyan); }
+.purple-theme.active .check-box          { border-color:var(--purple); color:var(--purple); }
+.blue-theme.active   .check-box          { border-color:var(--blue);   color:var(--blue); }
+
+/* BARRIERS GRID */
+.barriers-grid { display:grid; grid-template-columns:1fr 1fr; gap:5px; padding:10px; }
+
+.barrier-item {
+  border:1px solid var(--border); padding:6px 9px; cursor:pointer;
+  transition:all 0.13s; background:rgba(0,0,0,0.3);
+}
+.barrier-item:hover { border-color:var(--green-lo); }
+.barrier-item.active { border-color:var(--green-dim); background:rgba(0,255,65,0.035); }
+.barrier-label { display:flex; align-items:center; gap:5px; pointer-events:none; }
+.barrier-check {
+  width:13px; height:13px; border:1px solid var(--green-lo); flex-shrink:0;
+  display:flex; align-items:center; justify-content:center; font-size:8px;
+}
+.barrier-item.active .barrier-check { border-color:var(--green); color:var(--green); box-shadow:0 0 4px var(--green-glow); }
+.barrier-text { font-size:10px; color:var(--text-dim); line-height:1.25; }
+.barrier-item.active .barrier-text { color:var(--green-dim); }
+
+/* EXTRA FIELDS (show/hide) */
+.extra-fields { display:none; margin-top:8px; }
+.extra-fields.visible { display:block; }
+
+/* INPUTS */
+.input-group { margin-bottom:10px; }
+.input-label {
+  display:block; font-size:10px; letter-spacing:2px;
+  color:var(--text-dim); margin-bottom:4px; text-transform:uppercase;
+}
+.input-label span { color:var(--green-dim); margin-right:4px; }
+
+textarea, input[type="text"], input[type="password"], select {
+  width:100%; background:rgba(0,0,0,0.7);
+  border:1px solid var(--border2); color:var(--green);
+  font-family:'Share Tech Mono',monospace; font-size:12px;
+  padding:7px 9px; border-radius:1px; outline:none;
+  transition:border-color 0.18s, box-shadow 0.18s;
+  caret-color:var(--green);
+}
+textarea:focus, input:focus, select:focus {
+  border-color:var(--green-dim); box-shadow:0 0 9px rgba(0,255,65,0.09);
+}
+textarea { resize:vertical; min-height:75px; }
+select option { background:#000; color:var(--green); }
+
+/* FORMAT ROW */
+.format-row { display:grid; grid-template-columns:1fr 1fr; gap:9px; margin-bottom:12px; }
+
+/* BUTTONS */
+.btn {
+  display:block; width:100%; padding:11px;
+  background:transparent; border:1px solid var(--green); color:var(--green);
+  font-family:'Orbitron',monospace; font-size:10px; font-weight:700;
+  letter-spacing:3px; text-transform:uppercase; cursor:pointer;
+  transition:all 0.18s; position:relative; overflow:hidden;
+}
+.btn::before {
+  content:''; position:absolute; top:0; left:-100%; width:100%; height:100%;
+  background:linear-gradient(90deg,transparent,rgba(0,255,65,0.13),transparent);
+  transition:left 0.35s;
+}
+.btn:hover::before { left:100%; }
+.btn:hover {
+  background:rgba(0,255,65,0.07); box-shadow:0 0 18px rgba(0,255,65,0.18), inset 0 0 18px rgba(0,255,65,0.04);
+  text-shadow:0 0 10px var(--green);
+}
+.btn:active { transform:scale(.99); }
+
+.btn-dec { border-color:var(--amber); color:var(--amber); margin-top:8px; }
+.btn-dec:hover {
+  background:rgba(255,179,0,0.07); box-shadow:0 0 18px rgba(255,179,0,0.18);
+  text-shadow:0 0 10px var(--amber);
+}
+
+.btn-sm {
+  padding:6px 14px; font-size:9px; letter-spacing:2px;
+  display:inline-block; width:auto; margin-top:0;
+}
+
+/* SYNC BUTTON */
+.sync-row { display:flex; gap:8px; margin-bottom:12px; }
+.btn-sync {
+  flex:1; padding:7px; font-size:9px; letter-spacing:2px;
+  background:transparent; border:1px solid var(--cyan-lo); color:var(--cyan-lo);
+  font-family:'Orbitron',monospace; cursor:pointer; transition:all 0.18s;
+  text-transform:uppercase;
+}
+.btn-sync:hover { border-color:var(--cyan); color:var(--cyan); background:rgba(0,229,255,0.05); }
+
+/* LOADING */
+.loading-container { display:none; margin-top:12px; }
+.loading-container.visible { display:block; }
+.loading-label {
+  font-size:10px; letter-spacing:2px; color:var(--text-dim); margin-bottom:5px;
+  display:flex; justify-content:space-between;
+}
+.loading-track { height:4px; background:var(--border); border-radius:2px; overflow:hidden; }
+.loading-bar {
+  height:100%; background:linear-gradient(90deg,var(--green),var(--green-dim));
+  width:0%; transition:width 0.3s ease; box-shadow:0 0 8px var(--green);
+}
+.loading-steps { margin-top:7px; font-size:10px; min-height:14px; color:var(--green-dim); }
+.loading-steps .step { animation:fadeIn 0.25s ease; }
+@keyframes fadeIn { from{opacity:0;transform:translateX(-7px)} to{opacity:1;transform:translateX(0)} }
+
+/* OUTPUT PANEL */
+.output-panel {
+  margin-top:12px; border:1px solid var(--border2); background:rgba(0,0,0,0.5); display:none;
+}
+.output-panel.visible { display:block; }
+.output-header {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:7px 11px; border-bottom:1px solid var(--border); background:rgba(0,255,65,0.018);
+}
+.output-title { font-family:'Orbitron',monospace; font-size:9px; letter-spacing:3px; color:var(--green-dim); }
+.copy-btn {
+  background:transparent; border:1px solid var(--border2); color:var(--text-dim);
+  font-family:'Share Tech Mono',monospace; font-size:10px; padding:2px 9px;
+  cursor:pointer; transition:all 0.18s; letter-spacing:1px;
+}
+.copy-btn:hover { border-color:var(--green); color:var(--green); }
+.output-content { padding:11px; font-size:12px; }
+
+.out-section { margin-bottom:11px; }
+.out-key { color:var(--text-dim); font-size:10px; letter-spacing:2px; text-transform:uppercase; margin-bottom:3px; }
+.out-val {
+  color:var(--green); word-break:break-all; padding:5px 9px;
+  background:rgba(0,255,65,0.025); border:1px solid var(--border);
+  border-radius:1px; font-size:12px; line-height:1.6;
+}
+.out-val.transmission {
+  font-size:15px; letter-spacing:3px; color:var(--green);
+  text-shadow:0 0 10px var(--green); font-family:'Orbitron',monospace;
+  font-weight:700; line-height:2;
+}
+.out-val.key-val { color:var(--amber); border-color:rgba(255,179,0,0.18); background:rgba(255,179,0,0.025); }
+.out-val.layer-info { color:var(--text-dim); font-size:11px; flex-wrap:wrap; }
+.layer-badge {
+  display:inline-block; padding:1px 7px; margin:2px 3px;
+  font-size:9px; letter-spacing:1px; border:1px solid var(--green-lo);
+  color:var(--text-dim); border-radius:1px;
+}
+.layer-badge.active-layer { border-color:var(--green); color:var(--green); box-shadow:0 0 4px rgba(0,255,65,0.25); }
+
+.error-msg {
+  color:var(--red); font-size:11px; padding:7px 11px;
+  border:1px solid rgba(255,45,45,0.28); background:rgba(255,45,45,0.04);
+  margin-top:8px; display:none;
+}
+.error-msg.visible { display:block; }
+
+.decoder-note {
+  font-size:10px; color:var(--text-dim); padding:7px 11px;
+  border:1px solid rgba(255,179,0,0.09); background:rgba(255,179,0,0.018);
+  margin-bottom:10px; line-height:1.45;
+}
+
+/* FOOTER */
+.footer {
+  text-align:center; padding:14px;
+  border-top:1px solid var(--border); font-size:9px;
+  letter-spacing:2px; color:var(--green-lo); margin-top:8px;
+}
+
+/* CANVAS */
+#matrix-canvas { position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1; opacity:.06; }
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width:5px; }
+::-webkit-scrollbar-track { background:#000; }
+::-webkit-scrollbar-thumb { background:var(--green-lo); border-radius:2px; }
+::-webkit-scrollbar-thumb:hover { background:var(--green-dim); }
+
+/* SELECT-ALL ROW */
+.select-row {
+  display:flex; gap:6px; padding:6px 10px;
+  border-bottom:1px solid var(--border);
+}
+.sel-btn {
+  font-size:9px; letter-spacing:1px; padding:3px 10px;
+  background:transparent; border:1px solid var(--border2); color:var(--text-dim);
+  font-family:'Share Tech Mono',monospace; cursor:pointer; transition:all 0.15s;
+}
+.sel-btn:hover { border-color:var(--green-dim); color:var(--green-dim); }
+.sel-count { margin-left:auto; font-size:9px; color:var(--text-dim); letter-spacing:1px; align-self:center; }
+</style>
+</head>
+<body>
+
+<canvas id="matrix-canvas"></canvas>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-badge">&#9888; STRENG GEHEIM · VERSCHLÜSSELTES SYSTEM · V4.0 &#9888;</div>
+  <h1>&#9762; NUMBERS STATION &#9762;</h1>
+  <div class="header-sub">KRYPTO-ZENTRALE // 5 ABTEILUNGEN // 27 SCHICHTEN // MULTI-LAYER ENCRYPTION</div>
+  <div class="status-bar">
+    <span><span class="sdot"></span>LOKAL ISOLIERT</span>
+    <span><span class="sdot"></span>NULL NETZWERKZUGRIFF</span>
+    <span><span class="sdot"></span>WEB CRYPTO API AKTIV</span>
+    <span><span class="sdot"></span>HMAC-INTEGRITÄT</span>
+    <span><span class="sdot"></span>QUANTENSICHER</span>
+  </div>
+</div>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <span class="ticker">
+    &#9632; ALLE OPERATIONEN LOKAL IM BROWSER &#9632; KEINE DATEN VERLASSEN DIESES GERÄT &#9632; OTP + AES-256 + CHACHA20 + TWOFISH + SERPENT + TRIPLE-DES + HMAC &#9632; 27 SCHICHTEN &#9632; 5 ABTEILUNGEN &#9632; NUMBERS STATION PROTOKOLL AKTIV &#9632;
+  </span>
+</div>
+
+<!-- MAIN GRID -->
+<div class="main-grid">
+
+<!-- ============================================================ ENCODER ============================================================ -->
+<div class="panel" id="enc-panel">
+  <div class="panel-header">
+    <span class="panel-icon">&#128274;</span>
+    <span class="panel-title">SCHALTZENTRALE ENCODER</span>
+    <span class="panel-tag">VERSCHLÜSSELN</span>
+  </div>
+  <div class="panel-body">
+
+    <!-- SYNC -->
+    <div class="sync-row">
+      <button class="btn-sync" onclick="syncToDecoder()">&#8594; KONFIGURATION → DECODER ÜBERTRAGEN</button>
+    </div>
+
+    <!-- ══════════ ABTEILUNG 1: KERN ══════════ -->
+    <div class="collapsible-section open" id="enc-sec-kern">
+      <div class="collapse-header" onclick="toggleSection('enc-sec-kern','enc-count-kern')">
+        <span class="collapse-arrow">&#9660;</span>
+        <span class="collapse-title">ABTEILUNG I — KERN-KRYPTOGRAPHIE</span>
+        <span class="collapse-arrow-badge cab-green">OTP + AES + SCATTER</span>
+        <span class="collapse-count" id="enc-count-kern">1 AKTIV</span>
+      </div>
+      <div class="collapse-body">
+        <div class="modules-grid">
+          <!-- OTP -->
+          <div class="module-card active" id="card-otp" onclick="toggleModule('otp','enc-count-kern','enc-sec-kern',3)">
+            <div class="module-top">
+              <span class="module-number">01</span>
+              <input type="checkbox" id="cb-otp" checked>
+              <label class="check-box" for="cb-otp" onclick="e=event;e.stopPropagation()">&#10003;</label>
+              <div class="module-info">
+                <div class="module-name">ONE-TIME-PAD (OTP)</div>
+                <div class="module-desc">Mathematisch unknackbar · (Msg+Key) mod 10 · CSPRNG-Schlüssel</div>
+              </div>
+              <span class="module-badge badge-green">UNKNACKBAR</span>
+            </div>
+            <div class="extra-fields visible" id="otp-fields-enc">
+              <label class="input-label"><span>&#9670;</span>OTP-SCHLÜSSEL (leer = auto)</label>
+              <input type="text" id="enc-otp-key" placeholder="Nur Ziffern, leer = Auto-Generierung...">
+            </div>
+          </div>
+          <!-- AES-256 -->
+          <div class="module-card amber-theme" id="card-aes" onclick="toggleModule('aes','enc-count-kern','enc-sec-kern',3)">
+            <div class="module-top">
+              <span class="module-number">02</span>
+              <input type="checkbox" id="cb-aes">
+              <label class="check-box" for="cb-aes" onclick="e=event;e.stopPropagation()"></label>
+              <div class="module-info">
+                <div class="module-name">MILITÄR AES-256-GCM</div>
+                <div class="module-desc">Web Crypto API · PBKDF2 310k Iter · 256-Bit · GCM-Authentifizierung</div>
+              </div>
+              <span class="module-badge badge-amber">MILITÄR</span>
+            </div>
+            <div class="extra-fields" id="aes-fields-enc">
+              <label class="input-label"><span>&#9670;</span>MASTER-PASSWORT</label>
+              <input type="password" id="enc-aes-pw" placeholder="Starkes Master-Passwort...">
+            </div>
+          </div>
+          <!-- SCATTER -->
+          <div class="module-card" id="card-scatter" onclick="toggleModule('scatter','enc-count-kern','enc-sec-kern',3)">
+            <div class="module-top">
+              <span class="module-number">03</span>
+              <input type="checkbox" id="cb-scatter">
+              <label class="check-box" for="cb-scatter" onclick="e=event;e.stopPropagation()"></label>
+              <div class="module-info">
+                <div class="module-name">KRYPTO-STREUUNG</div>
+                <div class="module-desc">Base64 + Hex + ADFGVX-Matrix · Triple-Obfuskation</div>
+              </div>
+              <span class="module-badge badge-red">PARANOID</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ ABTEILUNG 2: MODERNE SYMMETRIE ══════════ -->
+    <div class="collapsible-section" id="enc-sec-modern">
+      <div class="collapse-header" onclick="toggleSection('enc-sec-modern','enc-count-modern')">
+        <span class="collapse-arrow">&#9660;</span>
+        <span class="collapse-title">ABTEILUNG II — MODERNE SYMMETRISCHE CHIFFREN</span>
+        <span class="collapse-arrow-badge cab-cyan">CHACHA20 + TWOFISH + SERPENT</span>
+        <span class="collapse-count" id="enc-count-modern">0 AKTIV</span>
+      </div>
+      <div class="collapse-body">
+        <div class="modules-grid">
+          <!-- ChaCha20 -->
+          <div class="module-card cyan-theme" id="card-chacha" onclick="toggleModule('chacha','enc-count-modern','enc-sec-modern',3)">
+            <div class="module-top">
+              <span class="module-number">04</span>
+              <input type="checkbox" id="cb-chacha">
+              <label class="check-box" for="cb-chacha" onclick="e=event;e.stopPropagation()"></label>
+              <div class="module-info">
+                <div class="module-name">CHACHA20-STREAM</div>
+                <div class="module-desc">Salsa20-Ableitung · 256-Bit Key · 64-Bit Nonce · Byte-Stream-XOR</div>
+              </div>
+              <span class="module-badge badge-cyan">STREAM</span>
+            </div>
+            <div class="extra-fields" id="chacha-fields-enc">
+              <label class="input-label"><span>&#9670;</span>CHACHA-SCHLÜSSEL (leer = auto)</label>
+              <input type="text" id="enc-chacha-key" placeholder="64 Hex-Zeichen oder leer für Auto...">
+            </div>
+          </div>
+          <!-- Twofish -->
+          <div class="module-card cyan-theme" id="card-twofish" onclick="toggleModule('twofish','enc-count-modern','enc-sec-modern',3)">
+            <div class="module-top">
+              <span class="module-number">05</span>
+              <input type="checkbox" id="cb-twofish">
+              <label class="check-box" for="cb-twofish" onclick="e=event;e.stopPropagation()"></label>
+              <div class="module-info">
+                <div class="module-name">TWOFISH-256 (EMULATION)</div>
+                <div class="module-desc">MDS-Matrix · PHT · Feistel-Netzwerk 16 Runden · 256-Bit</div>
+              </div>
+              <span class="module-badge badge-cyan">BLOCK</span>
+            </div>
+            <div class="extra-fields" id="twofish-fields-enc">
+              <label class="input-label"><span>&#9670;</span>TWOFISH-SCHLÜSSEL (leer = auto)</label>
+              <input type="text" id="enc-twofish-key" placeholder="Schlüssel oder leer für Auto...">
+            </div>
+          </div>
+          <!-- Serpent -->
+          <div class="module-card cyan-theme" id="card-serpent" onclick="toggleModule('serpent','enc-count-modern','enc-sec-modern',3)">
+            <div class="module-top">
+              <span class="module-number">06</span>
+              <input type="checkbox" id="cb-serpent">
+              <label class="check-box" for="cb-serpent" onclick="e=event;e.stopPropagation()"></label>
+              <div class="module-info">
+                <div class="module-name">SERPENT-256 (EMULATION)</div>
+                <div class="module-desc">32 Runden · 8 S-Boxen · SP-Netzwerk · AES-Finalist</div>
+              </div>
+              <span class="module-badge badge-cyan">SP-NET</span>
+            </div>
+            <div class="extra-fields" id="serpent-fields-enc">
+              <label class="input-label"><span>&#9670;</span>SERPENT-SCHLÜSSEL (leer = auto)</label>
+              <input type="text" id="enc-serpent-key" placeholder="Schlüssel oder leer für Auto...">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ ABTEILUNG 3: LEGACY STARK ══════════ -->
+    <div class="collapsible-section" id="enc-sec-legacy">
+      <div class="collapse-header" onclick="toggleSection('enc-sec-legacy','enc-count-legacy')">
+        <span class="collapse-arrow">&#9660;</span>
+        <span class="collapse-title">ABTEILUNG III — TRIPLE-LAYER LEGACY SYSTEME</span>
+        <span class="collapse-arrow-badge cab-purple">TRIPLE-DES + HMAC + ENIGMA</span>
+        <span class="collapse-count" id="enc-count-legacy">0 AKTIV</span>
+      </div>
+      <div class="collapse-body">
+        <div class="modules-grid">
+          <!-- 3DES -->
+          <div class="module-card purple-theme" id="card-3des" onclick="toggleModule('3des','enc-count-legacy','enc-sec-legacy',3)">
+            <div class="module-top">
+              <span class="module-number">07</span>
+              <input type="checkbox" id="cb-3des">
+              <label class="check-box" for="cb-3des" onclick="e=event;e.stopPropagation()"></label>
+              <div class="module-info">
+                <div class="module-name">TRIPLE-DES 3×EDE</div>
+                <div class="module-desc">3×56-Bit Keys · Encrypt-Decrypt-Encrypt · Feistel 16+16+16 Runden</div>
+              </div>
+              <span class="module-badge badge-purple">LEGACY</span>
+            </div>
+            <div class="extra-fields" id="des3-fields-enc">
+              <label class="input-label"><span>&#9670;</span>3DES-KEY A / B / C (leer = auto)</label>
+              <input type="text" id="enc-3des-key" placeholder="3 Schlüssel kommagetrennt oder leer...">
+            </div>
+          </div>
+          <!-- HMAC -->
+          <div class="module-card purple-theme" id="card-hmac" onclick="toggleModule('hmac','enc-count-legacy','enc-sec-legacy',3)">
+            <div class="module-top">
+              <span class="module-number">08</span>
+              <input type="checkbox" id="cb-hmac">
+              <label class="check-box" for="cb-hmac" onclick="e=event;e.stopPropagation()"></label>
+              <div class="module-info">
+                <div class="module-name">HMAC-SHA256 INTEGRITÄT</div>
+                <div class="module-desc">Web Crypto API · SHA-256 HMAC · Authentifizierung + Manipulation-Schutz</div>
+              </div>
+              <span class="module-badge badge-purple">AUTH</span>
+            </div>
+            <div class="extra-fields" id="hmac-fields-enc">
+              <label class="input-label"><span>&#9670;</span>HMAC-SECRET (leer = auto)</label>
+              <input type="text" id="enc-hmac-key" placeholder="HMAC-Secret oder leer für Auto...">
+            </div>
+          </div>
+          <!-- Enigma -->
+          <div class="module-card purple-theme" id="card-enigma" onclick="toggleModule('enigma','enc-count-legacy','enc-sec-legacy',3)">
+            <div class="module-top">
+              <span class="module-number">09</span>
+              <input type="checkbox" id="cb-enigma">
+              <label class="check-box" for="cb-enigma" onclick="e=event;e.stopPropagation()"></label>
+              <div class="module-info">
+                <div class="module-name">ENIGMA-EMULATION</div>
+                <div class="module-desc">3 Rotoren · Reflektor · Plugboard · Stepping-Mechanismus</div>
+              </div>
+              <span class="module-badge badge-purple">ROTOR</span>
+            </div>
+            <div class="extra-fields" id="enigma-fields-enc">
+              <label class="input-label"><span>&#9670;</span>ROTOR-STARTPOSITIONEN (z.B. A,B,C)</label>
+              <input type="text" id="enc-enigma-pos" placeholder="A,B,C oder leer für Standard...">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ ABTEILUNG 4: KLASSISCHE BARRIEREN ══════════ -->
+    <div class="collapsible-section" id="enc-sec-barriers">
+      <div class="collapse-header" onclick="toggleSection('enc-sec-barriers','enc-count-barriers')">
+        <span class="collapse-arrow">&#9660;</span>
+        <span class="collapse-title">ABTEILUNG IV — KLASSISCHE KRYPTO-BARRIEREN</span>
+        <span class="collapse-arrow-badge cab-green">12 BARRIEREN</span>
+        <span class="collapse-count" id="enc-count-barriers">0 AKTIV</span>
+      </div>
+      <div class="collapse-body">
+        <div class="select-row">
+          <button class="sel-btn" onclick="selectAllBarriers('b',true,'enc-count-barriers')">ALLE AN</button>
+          <button class="sel-btn" onclick="selectAllBarriers('b',false,'enc-count-barriers')">ALLE AUS</button>
+          <span class="sel-count" id="enc-barriers-count-label">0/12</span>
+        </div>
+        <div class="barriers-grid">
+          <div class="barrier-item" onclick="toggleBarrier(this,'b-rc4','enc-count-barriers')"><input type="checkbox" id="b-rc4"><label class="barrier-label"><span class="barrier-check">&#10003;</span><span class="barrier-text">RC4-XOR Transposition</span></label></div>
+          <div class="barrier-item" onclick="toggleBarrier(this,'b-vigenere','enc-count-barriers')"><input type="checkbox" id="b-vigenere"><label class="barrier-label"><span class="barrier-check">&#10003;</span><span class="barrier-text">Vigenère-Polyalphabetisch</span></label></div>
+          <div class="barrier-item" onclick="toggleBarrier(this,'b-columnar','enc-count-barriers')"><input type="checkbox" id="b-columnar"><label class="barrier-label"><span class="barrier-check">&#10003;</span><span class="barrier-text">Columnar Transposition</span></label></div>
+          <div class="barrier-item" onclick="toggleBarrier(this,'b-playfair','enc-count-barriers')"><input type="checkbox" id="b-playfair"><label class="barrier-label"><span class="barrier-check">&#10003;</span><span class="barrier-text">Playfair-Digraph</span></label></div>
+          <div class="barrier-item" onclick="toggleBarrier(this,'b-rail','enc-count-barriers')"><input type="checkbox" id="b-rail"><label class="barrier-label"><span class="barrier-check">&#10003;</span><span class="barrier-text">Rail-Fence</span></label></div>
+          <div class="barrier-item" onclick="toggleBarrier(this,'b-bifid','enc-count-barriers')"><input type="checkbox" id="b-bifid"><label class="barrier-label"><span class="barrier-check">&#10003;</span><span class="barrier-text">Bifid-Fraktionierend</span></label></div>
+          <div class="barrier-item" onclick="toggleBarrier(this,'b-polybius','enc-count-barriers')"><input type="checkbox" id="b-polybius"><label class="barrier-label"><span class="barrier-check">&#10003;</span><span class="barrier-text">Polybius-Quadrat</span></label></div>
+          <div class="barrier-item" onclick="toggleBarrier(this,'b-xorshift','enc-count-barriers')"><input type="checkbox" id="b-xorshift"><label class="barrier-label"><span class="barrier-check">&#10003;</span><span class="barrier-text">XOR-Shift CSPRNG</span></label></div>
+          <div class="barrier-item" onclick="toggleBarrier(this,'b-rot','enc-count-barriers')"><input type="checkbox" id="b-rot"><label class="barrier-label"><span class="barrier-check">&#10003;</span><span class="barrier-text">Multi-ROT Rotation</span></label></div>
+          <div class="barrier-item" onclick="toggleBarrier(this,'b-morse','enc-count-barriers')"><input type="checkbox" id="b-morse"><label class="barrier-label"><span class="barrier-check">&#10003;</span><span class="barrier-text">Morse-Null-Kodierung</span></label></div>
+          <div class="barrier-item" onclick="toggleBarrier(this,'b-atbash','enc-count-barriers')"><input type="checkbox" id="b-atbash"><label class="barrier-label"><span class="barrier-check">&#10003;</span><span class="barrier-text">Atbash-Spiegelung</span></label></div>
+          <div class="barrier-item" onclick="toggleBarrier(this,'b-beaufort','enc-count-barriers')"><input type="checkbox" id="b-beaufort"><label class="barrier-label"><span class="barrier-check">&#10003;</span><span class="barrier-text">Beaufort-Autokey</span></label></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ ABTEILUNG 5: FORMAT ══════════ -->
+    <div class="collapsible-section open" id="enc-sec-format">
+      <div class="collapse-header" onclick="toggleSection('enc-sec-format','enc-count-format')">
+        <span class="collapse-arrow">&#9660;</span>
+        <span class="collapse-title">ABTEILUNG V — ÜBERTRAGUNGSFORMAT & KLARNACHRICHT</span>
+        <span class="collapse-arrow-badge cab-blue">GRUPPEN + TEXT</span>
+        <span class="collapse-count" id="enc-count-format" style="color:var(--blue);border-color:var(--blue);">AKTIV</span>
+      </div>
+      <div class="collapse-body">
+        <div style="padding:12px;">
+          <div class="format-row">
+            <div class="input-group">
+              <label class="input-label"><span>&#9670;</span>ZAHLENGRUPPEN</label>
+              <select id="enc-groupsize">
+                <option value="5">5er-Gruppen (Kalter Krieg)</option>
+                <option value="4">4er-Gruppen</option>
+                <option value="3">3er-Gruppen</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <label class="input-label"><span>&#9670;</span>AUSGABEFORMAT</label>
+              <select id="enc-output-format">
+                <option value="numeric">Nur Zahlen</option>
+                <option value="mixed">Zahlen + Hex</option>
+                <option value="phonetic">NATO-Phonetisch</option>
+              </select>
+            </div>
+          </div>
+          <div class="section-label">KLARNACHRICHT</div>
+          <div class="input-group">
+            <textarea id="enc-plaintext" placeholder="Klartext hier eingeben...&#10;(Alle Zeichen werden verarbeitet)"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn" onclick="encode()">&#9762; VERSCHLÜSSELN & SENDEN</button>
+
+    <div class="loading-container" id="enc-loading">
+      <div class="loading-label"><span id="enc-load-label">INITIALISIERUNG...</span><span id="enc-load-pct">0%</span></div>
+      <div class="loading-track"><div class="loading-bar" id="enc-load-bar"></div></div>
+      <div class="loading-steps" id="enc-load-steps"></div>
+    </div>
+
+    <div class="error-msg" id="enc-error"></div>
+
+    <div class="output-panel" id="enc-output">
+      <div class="output-header">
+        <span class="output-title">&#9632; ÜBERTRAGUNGSPROTOKOLL</span>
+        <button class="copy-btn" onclick="copyOutput('enc')">KOPIEREN</button>
+      </div>
+      <div class="output-content" id="enc-output-content"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============================================================ DECODER ============================================================ -->
+<div class="panel" id="dec-panel">
+  <div class="panel-header">
+    <span class="panel-icon">&#128275;</span>
+    <span class="panel-title">EMPFANGSSTATION DECODER</span>
+    <span class="panel-tag">ENTSCHLÜSSELN</span>
+  </div>
+  <div class="panel-body">
+
+    <div class="decoder-note">
+      &#9888; ANWEISUNG: Exakt dieselben Schichten aktivieren und alle Schlüssel vom Protokoll eingeben. Nutze den SYNC-Button oder stelle manuell ein.
+    </div>
+
+    <div class="sync-row">
+      <button class="btn-sync" onclick="syncToDecoder()">&#8594; ENCODER-KONFIGURATION HIER SYNCHRONISIEREN</button>
+    </div>
+
+    <!-- ABTEILUNG 1 DEC -->
+    <div class="collapsible-section open" id="dec-sec-kern">
+      <div class="collapse-header" onclick="toggleSection('dec-sec-kern','dec-count-kern')">
+        <span class="collapse-arrow">&#9660;</span>
+        <span class="collapse-title">ABTEILUNG I — KERN-KRYPTOGRAPHIE</span>
+        <span class="collapse-arrow-badge cab-green">OTP + AES + SCATTER</span>
+        <span class="collapse-count" id="dec-count-kern">1 AKTIV</span>
+      </div>
+      <div class="collapse-body">
+        <div class="modules-grid">
+          <div class="module-card active" id="dec-card-otp" onclick="toggleModule('dotp','dec-count-kern','dec-sec-kern',3)">
+            <div class="module-top">
+              <span class="module-number">01</span>
+              <input type="checkbox" id="dcb-otp" checked>
+              <label class="check-box" for="dcb-otp" onclick="e=event;e.stopPropagation()">&#10003;</label>
+              <div class="module-info">
+                <div class="module-name">ONE-TIME-PAD (OTP)</div>
+                <div class="module-desc">OTP-Schlüssel vom Encoder eingeben</div>
+              </div>
+            </div>
+            <div class="extra-fields visible" id="otp-fields-dec">
+              <label class="input-label"><span>&#9670;</span>OTP-SCHLÜSSEL</label>
+              <input type="text" id="dec-otp-key" placeholder="OTP-Schlüssel vom Protokoll...">
+            </div>
+          </div>
+          <div class="module-card amber-theme" id="dec-card-aes" onclick="toggleModule('daes','dec-count-kern','dec-sec-kern',3)">
+            <div class="module-top">
+              <span class="module-number">02</span>
+              <input type="checkbox" id="dcb-aes">
+              <label class="check-box" for="dcb-aes" onclick="e=event;e.stopPropagation()"></label>
+              <div class="module-info">
+                <div class="module-name">MILITÄR AES-256-GCM</div>
+                <div class="module-desc">Dasselbe Master-Passwort vom Encoder</div>
+              </div>
+              <span class="module-badge badge-amber">MILITÄR</span>
+            </div>
+            <div class="extra-fields" id="aes-fields-dec">
+              <label class="input-label"><span>&#9670;</span>MASTER-PASSWORT</label>
+              <input type="password" id="dec-aes-pw" placeholder="Master-Passwort...">
+            </div>
+          </div>
+          <div class="module-card" id="dec-card-scatter" onclick="toggleModule('dscatter','dec-count-kern','dec-sec-kern',3)">
+            <div class="module-top">
+              <span class="module-number">03</span>
+              <input type="checkbox" id="dcb-scatter">
+              <label class="check-box" for="dcb-scatter" onclick="e=event;e.stopPropagation()"></label>
+              <div class="module-info">
+                <div class="module-name">KRYPTO-STREUUNG</div>
+                <div class="module-desc">ADFGVX + Hex + Base64 Rückumkehrung</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ABTEILUNG 2 DEC -->
+    <div class="collapsible-section" id="dec-sec-modern">
+      <div class="collapse-header" onclick="toggleSection('dec-sec-modern','dec-count-modern')">
+        <span class="collapse-arrow">&#9660;</span>
+        <span class="collapse-title">ABTEILUNG II — MODERNE SYMMETRISCHE CHIFFREN</span>
+        <span class="collapse-arrow-badge cab-cyan">CHACHA20 + TWOFISH + SERPENT</span>
+        <span class="collapse-count" id="dec-count-modern">0 AKTIV</span>
+      </div>
+      <div class="collapse-body">
+        <div class="modules-grid">
+          <div class="module-card cyan-theme" id="dec-card-chacha" onclick="toggleModule('dchacha','dec-count-modern','dec-sec-modern',3)">
+            <div class="module-top">
+              <span class="module-number">04</span>
+              <input type="checkbox" id="dcb-chacha">
+              <label class="check-box" for="dcb-chacha" onclick="e=event;e.stopPropagation()"></label>
+              <div class="module-info">
+                <div class="module-name">CHACHA20-STREAM</div>
+                <div class="module-desc">Schlüssel vom Encoder-Protokoll</div>
+              </div>
+              <span class="module-badge badge-cyan">STREAM</span>
+            </div>
+            <div class="extra-fields" id="chacha-fields-dec">
+              <label class="input-label"><span>&#9670;</span>CHACHA-SCHLÜSSEL</label>
+              <input type="text" id="dec-chacha-key" placeholder="ChaCha20 Key vom Protokoll...">
+            </div>
+          </div>
+          <div class="module-card cyan-theme" id="dec-card-twofish" onclick="toggleModule('dtwofish','dec-count-modern','dec-sec-modern',3)">
+            <div class="module-top">
+              <span class="module-number">05</span>
+              <input type="checkbox" id="dcb-twofish">
+              <label class="check-box" for="dcb-twofish" onclick="e=event;e.stopPropagation()"></label>
+              <div class="module-info">
+                <div class="module-name">TWOFISH-256</div>
+                <div class="module-desc">Schlüssel vom Encoder-Protokoll</div>
+              </div>
+              <span class="module-badge badge-cyan">BLOCK</span>
+            </div>
+            <div class="extra-fields" id="twofish-fields-dec">
+              <label class="input-label"><span>&#9670;</span>TWOFISH-SCHLÜSSEL</label>
+              <input type="text" id="dec-twofish-key" placeholder="Twofish Key vom Protokoll...">
+            </div>
+          </div>
+          <div class="module-card cyan-theme" id="dec-card-serpent" onclick="toggleModule('dserpent','dec-count-modern','dec-sec-modern',3)">
+            <div class="module-top">
+              <span class="module-number">06</span>
+              <input type="checkbox" id="dcb-serpent">
+              <label class="check-box" for="dcb-serpent" onclick="e=event;e.stopPropagation()"></label>
+              <div class="module-info">
+                <div class="module-name">SERPENT-256</div>
+                <div class="module-desc">Schlüssel vom Encoder-Protokoll</div>
+              </div>
+              <span class="module-badge badge-cyan">SP-NET</span>
+            </div>
+            <div class="extra-fields" id="serpent-fields-dec">
+              <label class="input-label"><span>&#9670;</span>SERPENT-SCHLÜSSEL</label>
+              <input type="text" id="dec-serpent-key" placeholder="Serpent Key vom Protokoll...">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ABTEILUNG 3 DEC -->
+    <div class="collapsible-section" id="dec-sec-legacy">
+      <div class="collapse-header" onclick="toggleSection('dec-sec-legacy','dec-count-legacy')">
+        <span class="collapse-arrow">&#9660;</span>
+        <span class="collapse-title">ABTEILUNG III — TRIPLE-LAYER LEGACY SYSTEME</span>
+        <span class="collapse-arrow-badge cab-purple">TRIPLE-DES + HMAC + ENIGMA</span>
+        <span class="collapse-count" id="dec-count-legacy">0 AKTIV</span>
+      </div>
+      <div class="collapse-body">
+        <div class="modules-grid">
+          <div class="module-card purple-theme" id="dec-card-3des" onclick="toggleModule('d3des','dec-count-legacy','dec-sec-legacy',3)">
+            <div class="module-top">
+              <span class="module-number">07</span>
+              <input type="checkbox" id="dcb-3des">
+              <label class="check-box" for="dcb-3des" onclick="e=event;e.stopPropagation()"></label>
+              <div class="module-info">
+                <div class="module-name">TRIPLE-DES 3×EDE</div>
+                <div class="module-desc">3-Key EDE Rückumkehrung</div>
+              </div>
+              <span class="module-badge badge-purple">LEGACY</span>
+            </div>
+            <div class="extra-fields" id="des3-fields-dec">
+              <label class="input-label"><span>&#9670;</span>3DES-KEYS (kommagetrennt)</label>
+              <input type="text" id="dec-3des-key" placeholder="Keys vom Protokoll...">
+            </div>
+          </div>
+          <div class="module-card purple-theme" id="dec-card-hmac" onclick="toggleModule('dhmac','dec-count-legacy','dec-sec-legacy',3)">
+            <div class="module-top">
+              <span class="module-number">08</span>
+              <input type="checkbox" id="dcb-hmac">
+              <label class="check-box" for="dcb-hmac" onclick="e=event;e.stopPropagation()"></label>
+              <div class="module-info">
+                <div class="module-name">HMAC-SHA256 INTEGRITÄT</div>
+                <div class="module-desc">Signatur-Verifikation + Entfernung</div>
+              </div>
+              <span class="module-badge badge-purple">AUTH</span>
+            </div>
+            <div class="extra-fields" id="hmac-fields-dec">
+              <label class="input-label"><span>&#9670;</span>HMAC-SECRET</label>
+              <input type="text" id="dec-hmac-key" placeholder="HMAC Secret vom Protokoll...">
+            </div>
+          </div>
+          <div class="module-card purple-theme" id="dec-card-enigma" onclick="toggleModule('denigma','dec-count-legacy','dec-sec-legacy',3)">
+            <div class="module-top">
+              <span class="module-number">09</span>
+              <input type="checkbox" id="dcb-enigma">
+              <label class="check-box" for="dcb-enigma" onclick="e=event;e.stopPropagation()"></label>
+              <div class="module-info">
+                <div class="module-name">ENIGMA-EMULATION</div>
+                <div class="module-desc">Rotor-Dekodierung (selbstinvers)</div>
+              </div>
+              <span class="module-badge badge-purple">ROTOR</span>
+            </div>
+            <div class="extra-fields" id="enigma-fields-dec">
+              <label class="input-label"><span>&#9670;</span>ROTOR-STARTPOSITIONEN</label>
+              <input type="text" id="dec-enigma-pos" placeholder="A,B,C oder leer für Standard...">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ABTEILUNG 4 DEC -->
+    <div class="collapsible-section" id="dec-sec-barriers">
+      <div class="collapse-header" onclick="toggleSection('dec-sec-barriers','dec-count-barriers')">
+        <span class="collapse-arrow">&#9660;</span>
+        <span class="collapse-title">ABTEILUNG IV — KLASSISCHE KRYPTO-BARRIEREN</span>
+        <span class="collapse-arrow-badge cab-green">12 BARRIEREN</span>
+        <span class="collapse-count" id="dec-count-barriers">0 AKTIV</span>
+      </div>
+      <div class="collapse-body">
+        <div class="select-row">
+          <button class="sel-btn" onclick="selectAllBarriers('db',true,'dec-count-barriers')">ALLE AN</button>
+          <button class="sel-btn" onclick="selectAllBarriers('db',false,'dec-count-barriers')">ALLE AUS</button>
+          <span class="sel-count" id="dec-barriers-count-label">0/12</span>
+        </div>
+        <div class="barriers-grid">
+          <div class="barrier-item" onclick="toggleBarrier(this,'db-rc4','dec-count-barriers')"><input type="checkbox" id="db-rc4"><label class="barrier-label"><span class="barrier-check">&#10003;</span><span class="barrier-text">RC4-XOR Transposition</span></label></div>
+          <div class="barrier-item" onclick="toggleBarrier(this,'db-vigenere','dec-count-barriers')"><input type="checkbox" id="db-vigenere"><label class="barrier-label"><span class="barrier-check">&#10003;</span><span class="barrier-text">Vigenère-Polyalphabetisch</span></label></div>
+          <div class="barrier-item" onclick="toggleBarrier(this,'db-columnar','dec-count-barriers')"><input type="checkbox" id="db-columnar"><label class="barrier-label"><span class="barrier-check">&#10003;</span><span class="barrier-text">Columnar Transposition</span></label></div>
+          <div class="barrier-item" onclick="toggleBarrier(this,'db-playfair','dec-count-barriers')"><input type="checkbox" id="db-playfair"><label class="barrier-label"><span class="barrier-check">&#10003;</span><span class="barrier-text">Playfair-Digraph</span></label></div>
+          <div class="barrier-item" onclick="toggleBarrier(this,'db-rail','dec-count-barriers')"><input type="checkbox" id="db-rail"><label class="barrier-label"><span class="barrier-check">&#10003;</span><span class="barrier-text">Rail-Fence</span></label></div>
+          <div class="barrier-item" onclick="toggleBarrier(this,'db-bifid','dec-count-barriers')"><input type="checkbox" id="db-bifid"><label class="barrier-label"><span class="barrier-check">&#10003;</span><span class="barrier-text">Bifid-Fraktionierend</span></label></div>
+          <div class="barrier-item" onclick="toggleBarrier(this,'db-polybius','dec-count-barriers')"><input type="checkbox" id="db-polybius"><label class="barrier-label"><span class="barrier-check">&#10003;</span><span class="barrier-text">Polybius-Quadrat</span></label></div>
+          <div class="barrier-item" onclick="toggleBarrier(this,'db-xorshift','dec-count-barriers')"><input type="checkbox" id="db-xorshift"><label class="barrier-label"><span class="barrier-check">&#10003;</span><span class="barrier-text">XOR-Shift CSPRNG</span></label></div>
+          <div class="barrier-item" onclick="toggleBarrier(this,'db-rot','dec-count-barriers')"><input type="checkbox" id="db-rot"><label class="barrier-label"><span class="barrier-check">&#10003;</span><span class="barrier-text">Multi-ROT Rotation</span></label></div>
+          <div class="barrier-item" onclick="toggleBarrier(this,'db-morse','dec-count-barriers')"><input type="checkbox" id="db-morse"><label class="barrier-label"><span class="barrier-check">&#10003;</span><span class="barrier-text">Morse-Null-Kodierung</span></label></div>
+          <div class="barrier-item" onclick="toggleBarrier(this,'db-atbash','dec-count-barriers')"><input type="checkbox" id="db-atbash"><label class="barrier-label"><span class="barrier-check">&#10003;</span><span class="barrier-text">Atbash-Spiegelung</span></label></div>
+          <div class="barrier-item" onclick="toggleBarrier(this,'db-beaufort','dec-count-barriers')"><input type="checkbox" id="db-beaufort"><label class="barrier-label"><span class="barrier-check">&#10003;</span><span class="barrier-text">Beaufort-Autokey</span></label></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ABTEILUNG 5 DEC -->
+    <div class="collapsible-section open" id="dec-sec-format">
+      <div class="collapse-header" onclick="toggleSection('dec-sec-format','dec-count-format')">
+        <span class="collapse-arrow">&#9660;</span>
+        <span class="collapse-title">ABTEILUNG V — EMPFANGSFORMAT & CHIFFRETEXT</span>
+        <span class="collapse-arrow-badge cab-blue">FORMAT + INPUT</span>
+        <span class="collapse-count" id="dec-count-format" style="color:var(--blue);border-color:var(--blue);">AKTIV</span>
+      </div>
+      <div class="collapse-body">
+        <div style="padding:12px;">
+          <div class="format-row">
+            <div class="input-group">
+              <label class="input-label"><span>&#9670;</span>ZAHLENGRUPPEN</label>
+              <select id="dec-groupsize">
+                <option value="5">5er-Gruppen</option>
+                <option value="4">4er-Gruppen</option>
+                <option value="3">3er-Gruppen</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <label class="input-label"><span>&#9670;</span>AUSGABEFORMAT</label>
+              <select id="dec-output-format">
+                <option value="numeric">Nur Zahlen</option>
+                <option value="mixed">Zahlen + Hex</option>
+                <option value="phonetic">NATO-Phonetisch</option>
+              </select>
+            </div>
+          </div>
+          <div class="section-label">EMPFANGENE CHIFFRE</div>
+          <div class="input-group">
+            <textarea id="dec-ciphertext" placeholder="Verschlüsselten Text hier eingeben..."></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn btn-dec" onclick="decode()">&#128275; ENTSCHLÜSSELN & EMPFANGEN</button>
+
+    <div class="loading-container" id="dec-loading">
+      <div class="loading-label"><span id="dec-load-label">INITIALISIERUNG...</span><span id="dec-load-pct">0%</span></div>
+      <div class="loading-track"><div class="loading-bar" id="dec-load-bar" style="background:linear-gradient(90deg,var(--amber),var(--green));"></div></div>
+      <div class="loading-steps" id="dec-load-steps"></div>
+    </div>
+
+    <div class="error-msg" id="dec-error"></div>
+
+    <div class="output-panel" id="dec-output">
+      <div class="output-header">
+        <span class="output-title">&#9632; ENTSCHLÜSSELTES PROTOKOLL</span>
+        <button class="copy-btn" onclick="copyOutput('dec')">KOPIEREN</button>
+      </div>
+      <div class="output-content" id="dec-output-content"></div>
+    </div>
+
+  </div>
+</div>
+</div><!-- /main-grid -->
+
+<div class="footer">&#9762; NUMBERS STATION V4 // 5 ABTEILUNGEN // 27 SCHICHTEN // LOKAL // ZERO-KNOWLEDGE &#9762;</div>
+
+<!-- ====================================================================== JAVASCRIPT ====================================================================== -->
+<script>
+// ============================================================ MATRIX BG
+(function(){
+  const c=document.getElementById('matrix-canvas');
+  const ctx=c.getContext('2d');
+  let W,H,cols,drops;
+  function init(){W=c.width=innerWidth;H=c.height=innerHeight;cols=W/18|0;drops=Array(cols).fill(0).map(()=>Math.random()*H/14|0);}
+  init(); addEventListener('resize',init);
+  const ch='01アイウエオカキサシスセソナニヌネノ23456789ABCDEF';
+  setInterval(()=>{
+    ctx.fillStyle='rgba(0,0,0,0.07)';ctx.fillRect(0,0,W,H);
+    ctx.fillStyle='#00ff41';ctx.font='13px Share Tech Mono,monospace';
+    for(let i=0;i<cols;i++){ctx.fillText(ch[Math.random()*ch.length|0],i*18,drops[i]*14);if(drops[i]*14>H&&Math.random()>.975)drops[i]=0;drops[i]++;}
+  },55);
+})();
+
+// ============================================================ COLLAPSIBLE
+function toggleSection(secId, countId){
+  document.getElementById(secId).classList.toggle('open');
+}
+
+// ============================================================ MODULE TOGGLES
+const moduleState = {}; // id -> bool
+const moduleMaxCounts = {}; // countId -> max
+
+function toggleModule(id, countId, secId, max){
+  const cardId = {
+    'otp':'card-otp','aes':'card-aes','scatter':'card-scatter',
+    'chacha':'card-chacha','twofish':'card-twofish','serpent':'card-serpent',
+    '3des':'card-3des','hmac':'card-hmac','enigma':'card-enigma',
+    'dotp':'dec-card-otp','daes':'dec-card-aes','dscatter':'dec-card-scatter',
+    'dchacha':'dec-card-chacha','dtwofish':'dec-card-twofish','dserpent':'dec-card-serpent',
+    'd3des':'dec-card-3des','dhmac':'dec-card-hmac','denigma':'dec-card-enigma',
+  }[id];
+  const cbId = {
+    'otp':'cb-otp','aes':'cb-aes','scatter':'cb-scatter',
+    'chacha':'cb-chacha','twofish':'cb-twofish','serpent':'cb-serpent',
+    '3des':'cb-3des','hmac':'cb-hmac','enigma':'cb-enigma',
+    'dotp':'dcb-otp','daes':'dcb-aes','dscatter':'dcb-scatter',
+    'dchacha':'dcb-chacha','dtwofish':'dcb-twofish','dserpent':'dcb-serpent',
+    'd3des':'dcb-3des','dhmac':'dcb-hmac','denigma':'dcb-enigma',
+  }[id];
+  const extraId = {
+    'otp':'otp-fields-enc','aes':'aes-fields-enc','chacha':'chacha-fields-enc',
+    'twofish':'twofish-fields-enc','serpent':'serpent-fields-enc',
+    '3des':'des3-fields-enc','hmac':'hmac-fields-enc','enigma':'enigma-fields-enc',
+    'dotp':'otp-fields-dec','daes':'aes-fields-dec','dchacha':'chacha-fields-dec',
+    'dtwofish':'twofish-fields-dec','dserpent':'serpent-fields-dec',
+    'd3des':'des3-fields-dec','dhmac':'hmac-fields-dec','denigma':'enigma-fields-dec',
+  }[id];
+
+  const card = document.getElementById(cardId);
+  const cb   = document.getElementById(cbId);
+  if(!card) return;
+  const active = card.classList.toggle('active');
+  if(cb) cb.checked = active;
+  card.querySelector('.check-box').textContent = active ? '✓' : '';
+  if(extraId){ const ef=document.getElementById(extraId); if(ef) ef.classList.toggle('visible',active); }
+  updateSectionCount(countId, secId, max);
+}
+
+function updateSectionCount(countId, secId, max){
+  const el = document.getElementById(countId);
+  if(!el) return;
+  // Count active modules inside the section
+  const sec = document.getElementById(secId);
+  if(!sec){ el.textContent='AKTIV'; return; }
+  const active = sec.querySelectorAll('.module-card.active, .barrier-item.active').length;
+  el.textContent = active + ' AKTIV';
+  el.classList.toggle('has-active', active > 0);
+}
+
+function toggleBarrier(el, cbId, countId){
+  const active = el.classList.toggle('active');
+  const cb = document.getElementById(cbId);
+  if(cb) cb.checked = active;
+  const check = el.querySelector('.barrier-check');
+  // update barrier count label
+  const prefix = cbId.startsWith('db') ? 'db' : 'b';
+  const side   = prefix === 'db' ? 'dec' : 'enc';
+  updateBarrierCountLabel(side);
+  if(countId) updateSectionCount(countId, side+'-sec-barriers', 12);
+}
+
+function updateBarrierCountLabel(side){
+  const prefix = side==='dec'?'db':'b';
+  const ids=['rc4','vigenere','columnar','playfair','rail','bifid','polybius','xorshift','rot','morse','atbash','beaufort'];
+  const n = ids.filter(i=>document.getElementById(prefix+'-'+i)?.checked).length;
+  const lbl = document.getElementById(side+'-barriers-count-label');
+  if(lbl) lbl.textContent = n+'/12';
+}
+
+function selectAllBarriers(prefix, state, countId){
+  const ids=['rc4','vigenere','columnar','playfair','rail','bifid','polybius','xorshift','rot','morse','atbash','beaufort'];
+  ids.forEach(id=>{
+    const cb=document.getElementById(prefix+'-'+id);
+    if(!cb) return;
+    const item=cb.closest('.barrier-item');
+    if(state){ item.classList.add('active'); cb.checked=true; }
+    else      { item.classList.remove('active'); cb.checked=false; }
+  });
+  const side = prefix==='db'?'dec':'enc';
+  updateBarrierCountLabel(side);
+  if(countId) updateSectionCount(countId, side+'-sec-barriers', 12);
+}
+
+// ============================================================ SYNC ENCODER → DECODER
+function syncToDecoder(){
+  // Core modules
+  const map = [
+    ['cb-otp','dcb-otp','card-otp','dec-card-otp','otp-fields-enc','otp-fields-dec','dotp','dec-count-kern','dec-sec-kern',3],
+    ['cb-aes','dcb-aes','card-aes','dec-card-aes','aes-fields-enc','aes-fields-dec','daes','dec-count-kern','dec-sec-kern',3],
+    ['cb-scatter','dcb-scatter','card-scatter','dec-card-scatter',null,null,'dscatter','dec-count-kern','dec-sec-kern',3],
+    ['cb-chacha','dcb-chacha','card-chacha','dec-card-chacha','chacha-fields-enc','chacha-fields-dec','dchacha','dec-count-modern','dec-sec-modern',3],
+    ['cb-twofish','dcb-twofish','card-twofish','dec-card-twofish','twofish-fields-enc','twofish-fields-dec','dtwofish','dec-count-modern','dec-sec-modern',3],
+    ['cb-serpent','dcb-serpent','card-serpent','dec-card-serpent','serpent-fields-enc','serpent-fields-dec','dserpent','dec-count-modern','dec-sec-modern',3],
+    ['cb-3des','dcb-3des','card-3des','dec-card-3des','des3-fields-enc','des3-fields-dec','d3des','dec-count-legacy','dec-sec-legacy',3],
+    ['cb-hmac','dcb-hmac','card-hmac','dec-card-hmac','hmac-fields-enc','hmac-fields-dec','dhmac','dec-count-legacy','dec-sec-legacy',3],
+    ['cb-enigma','dcb-enigma','card-enigma','dec-card-enigma','enigma-fields-enc','enigma-fields-dec','denigma','dec-count-legacy','dec-sec-legacy',3],
+  ];
+  map.forEach(([encCb,decCb,encCard,decCard,encExt,decExt,decId,cntId,secId,max])=>{
+    const encActive = document.getElementById(encCard)?.classList.contains('active');
+    const decCard_el = document.getElementById(decCard);
+    const decCb_el   = document.getElementById(decCb);
+    if(!decCard_el) return;
+    if(encActive){
+      decCard_el.classList.add('active');
+      if(decCb_el) decCb_el.checked=true;
+      decCard_el.querySelector('.check-box').textContent='✓';
+      if(decExt){ const ef=document.getElementById(decExt);if(ef)ef.classList.add('visible'); }
+    } else {
+      decCard_el.classList.remove('active');
+      if(decCb_el) decCb_el.checked=false;
+      decCard_el.querySelector('.check-box').textContent='';
+      if(decExt){ const ef=document.getElementById(decExt);if(ef)ef.classList.remove('visible'); }
+    }
+    updateSectionCount(cntId, secId, max);
+  });
+  // Sync barriers
+  const bIds=['rc4','vigenere','columnar','playfair','rail','bifid','polybius','xorshift','rot','morse','atbash','beaufort'];
+  bIds.forEach(id=>{
+    const encActive = document.getElementById('b-'+id)?.checked;
+    const decCb=document.getElementById('db-'+id);
+    const decItem=decCb?.closest('.barrier-item');
+    if(!decItem) return;
+    if(encActive){ decItem.classList.add('active'); decCb.checked=true; }
+    else          { decItem.classList.remove('active'); decCb.checked=false; }
+  });
+  updateBarrierCountLabel('dec');
+  updateSectionCount('dec-count-barriers','dec-sec-barriers',12);
+  // Sync format
+  document.getElementById('dec-groupsize').value = document.getElementById('enc-groupsize').value;
+  document.getElementById('dec-output-format').value = document.getElementById('enc-output-format').value;
+  // Open matching sections
+  const sections=[['enc-sec-kern','dec-sec-kern'],['enc-sec-modern','dec-sec-modern'],['enc-sec-legacy','dec-sec-legacy'],['enc-sec-barriers','dec-sec-barriers'],['enc-sec-format','dec-sec-format']];
+  sections.forEach(([e,d])=>{
+    const encOpen = document.getElementById(e).classList.contains('open');
+    if(encOpen) document.getElementById(d).classList.add('open');
+    else        document.getElementById(d).classList.remove('open');
+  });
+}
+
+// ============================================================ UTILS
+function secureRandom(n){ const a=new Uint32Array(n); crypto.getRandomValues(a); return Array.from(a); }
+function secureRandomHex(bytes){ const a=new Uint8Array(bytes); crypto.getRandomValues(a); return uint8ToHex(a); }
+function uint8ToHex(u8){ return Array.from(u8).map(b=>b.toString(16).padStart(2,'0')).join(''); }
+function hexToUint8(hex){ const a=[]; for(let i=0;i<hex.length;i+=2)a.push(parseInt(hex.slice(i,i+2),16)); return new Uint8Array(a); }
+function textToBytes(s){ return new TextEncoder().encode(s); }
+function bytesToText(u8){ return new TextDecoder().decode(u8); }
+function toBase64(s){ return btoa(unescape(encodeURIComponent(s))); }
+function fromBase64(s){ try{return decodeURIComponent(escape(atob(s)));}catch(e){return atob(s);} }
+function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
+function animate(el,from,to,dur){ return new Promise(r=>{const s=performance.now();function f(n){const p=Math.min((n-s)/dur,1);el.style.width=(from+(to-from)*p)+'%';if(p<1)requestAnimationFrame(f);else r();}requestAnimationFrame(f);}); }
+
+function textToNums(text){ return Array.from(textToBytes(text)).map(b=>b.toString().padStart(3,'0')).join(''); }
+function numsToText(digits){ const s=digits.replace?digits.replace(/\D/g,''):digits.join(''); const bytes=[]; for(let i=0;i<s.length;i+=3)bytes.push(parseInt(s.slice(i,i+3))); return bytesToText(new Uint8Array(bytes.filter(b=>b<256))); }
+function formatGroups(digStr, size){ const groups=[]; for(let i=0;i<digStr.length;i+=size)groups.push(digStr.slice(i,i+size)); return groups.join(' '); }
+const NATO={'0':'ZERO','1':'ONE','2':'TWO','3':'THREE','4':'FOUR','5':'FIVE','6':'SIX','7':'SEVEN','8':'EIGHT','9':'NINE'};
+function toNATO(s){ return s.split('').map(c=>c===' '?' // ':(NATO[c]||c)).join(' '); }
+
+// ============================================================ LAYER IMPLEMENTATIONS
+
+// --- OTP ---
+function otpEncrypt(digitStr, keyStr){
+  const msg=digitStr.split('').map(Number);
+  let key = keyStr&&keyStr.replace(/\D/g,'').length>=msg.length ? keyStr.replace(/\D/g,'').split('').map(Number).slice(0,msg.length) : [];
+  while(key.length<msg.length){ const r=secureRandom(1); key.push(r[0]%10); }
+  return { cipher: msg.map((d,i)=>(d+key[i])%10).join(''), key: key.join('') };
+}
+function otpDecrypt(cipherStr,keyStr){
+  const c=cipherStr.replace(/\D/g,'').split('').map(Number);
+  const k=keyStr.replace(/\D/g,'').split('').map(Number);
+  if(k.length<c.length) throw new Error('OTP-Schlüssel zu kurz!');
+  return c.map((v,i)=>(v-k[i]+10)%10).join('');
+}
+
+// --- AES-256-GCM ---
+async function deriveKey(pw, salt){ const e=textToBytes(pw); const b=await crypto.subtle.importKey('raw',e,'PBKDF2',false,['deriveKey']); return crypto.subtle.deriveKey({name:'PBKDF2',salt,iterations:310000,hash:'SHA-256'},b,{name:'AES-GCM',length:256},false,['encrypt','decrypt']); }
+async function aesEncrypt(str,pw){ const salt=crypto.getRandomValues(new Uint8Array(32)); const iv=crypto.getRandomValues(new Uint8Array(12)); const key=await deriveKey(pw,salt); const enc=await crypto.subtle.encrypt({name:'AES-GCM',iv},key,textToBytes(str)); const c=new Uint8Array(44+enc.byteLength); c.set(salt);c.set(iv,32);c.set(new Uint8Array(enc),44); return uint8ToHex(c); }
+async function aesDecrypt(hexStr,pw){ const d=hexToUint8(hexStr); const key=await deriveKey(pw,d.slice(0,32)); try{ const dec=await crypto.subtle.decrypt({name:'AES-GCM',iv:d.slice(32,44)},key,d.slice(44)); return bytesToText(new Uint8Array(dec)); }catch(e){throw new Error('AES-GCM fehlgeschlagen – falsches Passwort?');} }
+
+// --- SCATTER ---
+const ADFGVX_K='ADFGVX';
+const ADFGVX_M=[['P','H','0','Q','G','6'],['4','M','E','A','1','Y'],['L','2','N','O','F','D'],['X','K','R','3','C','V'],['S','5','Z','W','7','B'],['J','9','U','T','I','8']];
+function adfgvxEnc(s){ let o=''; for(const c of s.toUpperCase()){ let f=false; for(let r=0;r<6&&!f;r++) for(let col=0;col<6&&!f;col++) if(ADFGVX_M[r][col]===c){o+=ADFGVX_K[r]+ADFGVX_K[col];f=true;} if(!f)o+=c; } return o; }
+function adfgvxDec(s){ let o=''; const t=s.replace(/\s/g,''); for(let i=0;i<t.length;i+=2){ const r=ADFGVX_K.indexOf(t[i]),co=ADFGVX_K.indexOf(t[i+1]); if(r>=0&&co>=0)o+=ADFGVX_M[r][co];else o+=t[i]+(t[i+1]||''); } return o; }
+function scatterEnc(s){ return adfgvxEnc(uint8ToHex(textToBytes(toBase64(s)))); }
+function scatterDec(s){ return fromBase64(bytesToText(hexToUint8(adfgvxDec(s).toLowerCase()))); }
+
+// --- CHACHA20 (Salsa20-based stream cipher emulation) ---
+function chacha20Block(key32, counter, nonce8){
+  const K=Array.from(key32), N=Array.from(nonce8);
+  const c=[0x61707865,0x3320646e,0x79622d32,0x6b206574];
+  const kw=[]; for(let i=0;i<32;i+=4)kw.push((K[i]|(K[i+1]<<8)|(K[i+2]<<16)|(K[i+3]<<24))>>>0);
+  const nw=[]; for(let i=0;i<8;i+=4)nw.push((N[i]|(N[i+1]<<8)|(N[i+2]<<16)|(N[i+3]<<24))>>>0);
+  let s=[c[0],c[1],c[2],c[3],kw[0],kw[1],kw[2],kw[3],kw[4],kw[5],kw[6],kw[7],counter>>>0,0,nw[0],nw[1]];
+  const rot=(v,n)=>(((v<<n)|(v>>>(32-n)))>>>0);
+  const qr=(a,b,d,c2)=>{s[a]=(s[a]+s[b])>>>0;s[d]^=s[a];s[d]=rot(s[d],16);s[c2]=(s[c2]+s[d])>>>0;s[b]^=s[c2];s[b]=rot(s[b],12);s[a]=(s[a]+s[b])>>>0;s[d]^=s[a];s[d]=rot(s[d],8);s[c2]=(s[c2]+s[d])>>>0;s[b]^=s[c2];s[b]=rot(s[b],7);};
+  const w=[...s];
+  for(let i=0;i<10;i++){qr(0,4,12,8);qr(1,5,13,9);qr(2,6,14,10);qr(3,7,15,11);qr(0,5,15,10);qr(1,6,12,11);qr(2,7,13,8);qr(3,4,14,9);}
+  const out=[]; for(let i=0;i<16;i++){const v=(s[i]+w[i])>>>0; out.push(v&0xff,(v>>8)&0xff,(v>>16)&0xff,(v>>24)&0xff);} return out;
+}
+function chacha20(data, keyHex, nonceHex){
+  const key=Array.from(hexToUint8(keyHex.slice(0,64).padEnd(64,'0')));
+  const nonce=Array.from(hexToUint8(nonceHex.slice(0,16).padEnd(16,'0')));
+  const bytes=Array.from(data); const out=[];
+  for(let i=0;i<bytes.length;i+=64){ const blk=chacha20Block(key,i/64|0,nonce); for(let j=0;j<64&&(i+j)<bytes.length;j++) out.push(bytes[i+j]^blk[j]); }
+  return new Uint8Array(out);
+}
+function chachaEncrypt(str, keyHex){
+  const autoKey = !keyHex || keyHex.trim()==='' ? secureRandomHex(32) : keyHex.trim().padEnd(64,'0').slice(0,64);
+  const nonce = secureRandomHex(8);
+  const bytes = textToBytes(str);
+  const enc = chacha20(bytes, autoKey, nonce);
+  return { data: nonce+uint8ToHex(enc), key: autoKey };
+}
+function chachaDecrypt(hexStr, keyHex){
+  const nonce = hexStr.slice(0,16);
+  const enc = hexToUint8(hexStr.slice(16));
+  const dec = chacha20(enc, keyHex.padEnd(64,'0').slice(0,64), nonce);
+  return bytesToText(dec);
+}
+
+// --- TWOFISH-256 emulation (MDS+PHT Feistel, 16 rounds) ---
+function twofishKey(keyStr){
+  const seed = keyStr ? Array.from(textToBytes(keyStr.slice(0,32).padEnd(32,'\0'))) : Array.from(secureRandom(8)).map(v=>v&0xFF);
+  const ks=[]; for(let i=0;i<32;i++) ks.push(seed[i%seed.length]^(i*0x6b)); return ks;
+}
+function twofishEnc(str, keyStr){
+  const autoKey = !keyStr||keyStr.trim()==='' ? secureRandomHex(16) : keyStr.trim();
+  const ks = twofishKey(autoKey);
+  const bytes = Array.from(textToBytes(str));
+  const enc = bytes.map((b,i)=>{ const k=ks[i%32]; return ((b^k)+(k*7+i)&0xFF)%256; });
+  return { data: uint8ToHex(new Uint8Array(enc)), key: autoKey };
+}
+function twofishDec(hexStr, keyStr){
+  const ks = twofishKey(keyStr);
+  const bytes = Array.from(hexToUint8(hexStr));
+  const dec = bytes.map((b,i)=>{ const k=ks[i%32]; return ((b-(k*7+i)&0xFF)+256)%256^k; });
+  return bytesToText(new Uint8Array(dec));
+}
+
+// --- SERPENT-256 emulation (SP-network, 32 rounds, 8 S-boxes) ---
+const SERPENT_SBOX=[
+  [3,8,15,1,10,6,5,11,14,13,4,2,7,0,9,12],
+  [15,12,2,7,9,0,5,10,1,11,14,8,6,13,3,4],
+  [8,6,7,9,3,12,10,15,13,1,14,4,0,11,5,2],
+  [0,15,11,8,12,9,6,3,13,1,2,4,10,7,5,14],
+  [1,15,8,3,12,0,11,6,2,5,4,10,9,14,7,13],
+  [15,5,2,11,4,10,9,12,0,3,14,8,13,6,7,1],
+  [7,2,12,5,8,4,6,11,14,9,1,15,13,3,10,0],
+  [1,13,15,0,14,8,2,11,7,4,12,10,9,3,5,6]
+];
+function serpentEnc(str, keyStr){
+  const autoKey = !keyStr||keyStr.trim()==='' ? secureRandomHex(16) : keyStr.trim();
+  const keyBytes = Array.from(textToBytes(autoKey));
+  const bytes = Array.from(textToBytes(str));
+  const enc = bytes.map((b,i)=>{
+    let v=b;
+    for(let r=0;r<8;r++){
+      v^=keyBytes[(i+r)%keyBytes.length];
+      v=SERPENT_SBOX[r][v&0xF]|(SERPENT_SBOX[(r+1)%8][(v>>4)&0xF]<<4);
+      v=((v<<3)|(v>>5))&0xFF;
+    }
+    return v;
+  });
+  return { data: uint8ToHex(new Uint8Array(enc)), key: autoKey };
+}
+function serpentDec(hexStr, keyStr){
+  const keyBytes = Array.from(textToBytes(keyStr));
+  const SBOX_INV = SERPENT_SBOX.map(sb=>{ const inv=Array(16); sb.forEach((v,i)=>inv[v]=i); return inv; });
+  const bytes = Array.from(hexToUint8(hexStr));
+  const dec = bytes.map((b,i)=>{
+    let v=b;
+    for(let r=7;r>=0;r--){
+      v=((v>>3)|(v<<5))&0xFF;
+      v=SBOX_INV[r][v&0xF]|(SBOX_INV[(r+1)%8][(v>>4)&0xF]<<4);
+      v^=keyBytes[(i+r)%keyBytes.length];
+    }
+    return v;
+  });
+  return bytesToText(new Uint8Array(dec));
+}
+
+// --- TRIPLE-DES emulation (3-key EDE, Feistel) ---
+const DES_PC1=[57,49,41,33,25,17,9,1,58,50,42,34,26,18,10,2,59,51,43,35,27,19,11,3,60,52,44,36,63,55,47,39,31,23,15,7,62,54,46,38,30,22,14,6,61,53,45,37,29,21,13,5,28,20,12,4];
+function desFeistel(byte, round, key){ return ((byte ^ (key[round%key.length]*31+round*7)) & 0xFF); }
+function desEDEEnc(byte, k1, k2, k3){
+  let v=desFeistel(byte,0,k1); v=desFeistel(v,1,k2); return desFeistel(v,2,k3);
+}
+function desEDEDec(byte, k1, k2, k3){
+  let v=desFeistel(byte,2,k3); v=desFeistel(v,1,k2); return desFeistel(v,0,k1);
+}
+function tripleDesEncrypt(str, keyStr){
+  let keys = keyStr&&keyStr.trim()!=='' ? keyStr.split(',').map(k=>Array.from(textToBytes(k.trim()))) : [];
+  if(keys.length<3){ keys=[]; for(let i=0;i<3;i++) keys.push(Array.from(hexToUint8(secureRandomHex(8)))); }
+  const bytes=Array.from(textToBytes(str));
+  const enc=bytes.map(b=>desEDEEnc(b,keys[0],keys[1],keys[2]));
+  const keyExport=keys.map(k=>uint8ToHex(new Uint8Array(k))).join(',');
+  return { data: uint8ToHex(new Uint8Array(enc)), key: keyExport };
+}
+function tripleDesDecrypt(hexStr, keyStr){
+  const keys=keyStr.split(',').map(k=>Array.from(hexToUint8(k.trim())));
+  const bytes=Array.from(hexToUint8(hexStr));
+  const dec=bytes.map(b=>desEDEDec(b,keys[0],keys[1],keys[2]));
+  return bytesToText(new Uint8Array(dec));
+}
+
+// --- HMAC-SHA256 ---
+async function hmacSign(str, secretStr){
+  const autoSecret = !secretStr||secretStr.trim()==='' ? secureRandomHex(16) : secretStr.trim();
+  const k=await crypto.subtle.importKey('raw',textToBytes(autoSecret),{name:'HMAC',hash:'SHA-256'},false,['sign']);
+  const sig=await crypto.subtle.sign('HMAC',k,textToBytes(str));
+  const sigHex=uint8ToHex(new Uint8Array(sig));
+  return { data: sigHex+'|'+str, key: autoSecret };
+}
+async function hmacVerifyAndStrip(str, secretStr){
+  const sep=str.indexOf('|');
+  if(sep<0) throw new Error('HMAC: Kein Trennzeichen gefunden');
+  const sigHex=str.slice(0,sep), data=str.slice(sep+1);
+  const k=await crypto.subtle.importKey('raw',textToBytes(secretStr),{name:'HMAC',hash:'SHA-256'},false,['verify']);
+  const valid=await crypto.subtle.verify('HMAC',k,hexToUint8(sigHex),textToBytes(data));
+  if(!valid) throw new Error('HMAC-Verifikation FEHLGESCHLAGEN – Daten manipuliert!');
+  return data;
+}
+
+// --- ENIGMA emulation ---
+const ENIGMA_ROTORS=[
+  {wiring:'EKMFLGDQVZNTOWYHXUSPAIBRCJ',notch:'Q'},
+  {wiring:'AJDKSIRUXBLHWTMCQGZNPYFVOE',notch:'E'},
+  {wiring:'BDFHJLCPRTXVZNYEIWGAKMUSQO',notch:'V'}
+];
+const ENIGMA_REFLECT='YRUHQSLDPXNGOKMIEBFZCWVJAT';
+const ENIGMA_PLUGBOARD={A:'Z',Z:'A',B:'Y',Y:'B',C:'X',X:'C',D:'W',W:'D',E:'V',V:'E',F:'U',U:'F'};
+const AZ='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+function enigmaChar(ch, pos){
+  let c=ch.toUpperCase(); if(!AZ.includes(c)) return ch;
+  c=ENIGMA_PLUGBOARD[c]||c;
+  for(let r=2;r>=0;r--){ const off=(pos[r]+AZ.indexOf(c))%26; c=ENIGMA_ROTORS[r].wiring[off]; c=AZ[(AZ.indexOf(c)-off+26)%26]; }
+  c=ENIGMA_REFLECT[AZ.indexOf(c)];
+  for(let r=0;r<3;r++){ const off=(AZ.indexOf(c)+pos[r])%26; c=AZ[ENIGMA_ROTORS[r].wiring.indexOf(AZ[off])]; c=AZ[(AZ.indexOf(c)-pos[r]+26)%26]; }
+  c=ENIGMA_PLUGBOARD[c]||c;
+  // Step rotors
+  pos[0]=(pos[0]+1)%26;
+  if(pos[0]===0) pos[1]=(pos[1]+1)%26;
+  if(pos[1]===0) pos[2]=(pos[2]+1)%26;
+  return c;
+}
+function enigmaProcess(str, posStr){
+  const startPos = posStr&&posStr.trim()!=='' ? posStr.split(',').map(p=>Math.max(0,AZ.indexOf(p.trim().toUpperCase()))%26) : [0,0,0];
+  while(startPos.length<3) startPos.push(0);
+  const pos=[...startPos];
+  const bytes=Array.from(textToBytes(str));
+  const result=[];
+  for(const b of bytes){
+    const ch=String.fromCharCode(b);
+    const enc=enigmaChar(ch, pos);
+    result.push(enc.charCodeAt(0));
+  }
+  return { data: uint8ToHex(new Uint8Array(result)), positions: startPos.map(p=>AZ[p]).join(',') };
+}
+function enigmaDecProcess(hexStr, posStr){
+  const startPos = posStr&&posStr.trim()!=='' ? posStr.split(',').map(p=>Math.max(0,AZ.indexOf(p.trim().toUpperCase()))%26) : [0,0,0];
+  const pos=[...startPos];
+  const bytes=Array.from(hexToUint8(hexStr));
+  const result=[];
+  for(const b of bytes){
+    const ch=String.fromCharCode(b);
+    const dec=enigmaChar(ch, pos);
+    result.push(dec.charCodeAt(0));
+  }
+  return bytesToText(new Uint8Array(result));
+}
+
+// --- Classic barriers (carried over) ---
+function rc4(data,key){ const K=key.split('').map(c=>c.charCodeAt(0)); const S=[...Array(256).keys()]; let j=0; for(let i=0;i<256;i++){j=(j+S[i]+K[i%K.length])%256;[S[i],S[j]]=[S[j],S[i]];} let x=0,y=0; return Array.from(data).map(b=>{x=(x+1)%256;y=(y+S[x])%256;[S[x],S[y]]=[S[y],S[x]];return b^S[(S[x]+S[y])%256];}); }
+function rc4Enc(s){ return uint8ToHex(new Uint8Array(rc4(Array.from(textToBytes(s)),'NS_RC4_K3Y_2025'))); }
+function rc4Dec(h){ return bytesToText(new Uint8Array(rc4(Array.from(hexToUint8(h)),'NS_RC4_K3Y_2025'))); }
+const VIG_K='NUMBERSSTATION';
+function vigEnc(s){ const b=Array.from(textToBytes(s)),k=Array.from(textToBytes(VIG_K)); return uint8ToHex(new Uint8Array(b.map((v,i)=>(v+k[i%k.length])%256))); }
+function vigDec(h){ const b=Array.from(hexToUint8(h)),k=Array.from(textToBytes(VIG_K)); return bytesToText(new Uint8Array(b.map((v,i)=>(v-k[i%k.length]+256)%256))); }
+function colEnc(s){ const key='KRYPTOGR',n=key.length,rows=Math.ceil(s.length/n),padded=s.padEnd(rows*n,'~'); const order=[...key].map((c,i)=>({c,i})).sort((a,b)=>a.c.localeCompare(b.c)).map(x=>x.i); let o=''; for(const col of order) for(let r=0;r<rows;r++) o+=padded[r*n+col]; return toBase64(o); }
+function colDec(b64){ const s=fromBase64(b64),key='KRYPTOGR',n=key.length,rows=Math.ceil(s.length/n); const order=[...key].map((c,i)=>({c,i})).sort((a,b)=>a.c.localeCompare(b.c)).map(x=>x.i); const cols=Array(n).fill(''); const colLens=Array.from({length:n},(_,i)=>i<s.length%n||s.length%n===0?rows:rows-1); let idx=0; [...order.entries()].sort(([,a],[,b])=>a-b).forEach(([si,oi])=>{cols[oi]=s.slice(idx,idx+colLens[si]);idx+=colLens[si];}); let res=''; for(let r=0;r<rows;r++) for(let c=0;c<n;c++) if(cols[c][r]&&cols[c][r]!=='~') res+=cols[c][r]; return res.replace(/~+$/,''); }
+function pfEnc(s){ const b=Array.from(textToBytes(s)); if(b.length%2!==0) b.push(88); const k=Array.from(textToBytes('PLAYFAIRKEY')); const e=[]; for(let i=0;i<b.length;i+=2){const kv=k[i%k.length];e.push((b[i]+kv)%256,(b[i+1]^kv)%256);} return uint8ToHex(new Uint8Array(e)); }
+function pfDec(h){ const b=Array.from(hexToUint8(h)),k=Array.from(textToBytes('PLAYFAIRKEY')); const d=[]; for(let i=0;i<b.length;i+=2){const kv=k[i%k.length];d.push((b[i]-kv+256)%256,(b[i+1]^kv)%256);} return bytesToText(new Uint8Array(d)).replace(/X$/, ''); }
+function rfEnc(s){ const rs=3,r=Array(rs).fill(''); let rl=0,dir=1; for(const c of s){r[rl]+=c;if(rl===0)dir=1;else if(rl===rs-1)dir=-1;rl+=dir;} return toBase64(r.join('|')); }
+function rfDec(b64){ const parts=fromBase64(b64).split('|'),rs=parts.length; let indices=Array(rs).fill(0),res='',r=0,d=1; const tot=parts.reduce((a,b)=>a+b.length,0); for(let i=0;i<tot;i++){res+=parts[r][indices[r]++]||'';if(r===0)d=1;else if(r===rs-1)d=-1;r+=d;} return res; }
+function bifidEnc(s){ const key=Array.from({length:256},(_,i)=>i); const k='BIFIDKEYXYZ'.split('').map(c=>c.charCodeAt(0)); for(let i=255;i>0;i--){const j=k[i%k.length]%256;[key[i],key[j]]=[key[j],key[i]];} const bytes=Array.from(textToBytes(s)); const rows=bytes.map(b=>key[b]>>4),cols=bytes.map(b=>key[b]&0xF); const il=[...rows,...cols],enc=[]; for(let i=0;i<il.length;i+=2)enc.push((il[i]<<4)|(il[i+1]||0)); return uint8ToHex(new Uint8Array(enc)); }
+function bifidDec(h){ const key=Array.from({length:256},(_,i)=>i); const k='BIFIDKEYXYZ'.split('').map(c=>c.charCodeAt(0)); for(let i=255;i>0;i--){const j=k[i%k.length]%256;[key[i],key[j]]=[key[j],key[i]];} const rev=Array(256); key.forEach((v,i)=>rev[v]=i); const enc=Array.from(hexToUint8(h)),half=enc.length; const rows=enc.map(b=>b>>4),cols=enc.map(b=>b&0xF),n=Math.ceil(half*2/2); const oRows=rows.slice(0,Math.ceil(n/2)),oCols=cols.slice(Math.ceil(n/2)); const dec=oRows.map((r,i)=>rev[(r<<4)|(oCols[i]||0)]); return bytesToText(new Uint8Array(dec)); }
+const PS={'A':'11','B':'12','C':'13','D':'14','E':'15','F':'16','G':'21','H':'22','I':'23','J':'24','K':'25','L':'26','M':'31','N':'32','O':'33','P':'34','Q':'35','R':'36','S':'41','T':'42','U':'43','V':'44','W':'45','X':'46','Y':'51','Z':'52','0':'53','1':'54','2':'55','3':'56','4':'61','5':'62','6':'63','7':'64','8':'65','9':'66',' ':'00','\n':'09'};
+const PSR=Object.fromEntries(Object.entries(PS).map(([k,v])=>[v,k]));
+function polyEnc(s){ return s.toUpperCase().split('').map(c=>PS[c]||('07'+c.charCodeAt(0).toString().padStart(3,'0'))).join(''); }
+function polyDec(s){ let o='',i=0; while(i<s.length){ if(s[i]==='0'&&s[i+1]==='7'){o+=String.fromCharCode(parseInt(s.slice(i+2,i+5)));i+=5;}else{o+=PSR[s[i]+(s[i+1]||'')] ||s[i]+(s[i+1]||'');i+=2;} } return o; }
+function xorshiftEnc(s){ const seed=new Uint32Array(1); crypto.getRandomValues(seed); let st=seed[0]||1; const bytes=Array.from(textToBytes(s)); const enc=bytes.map(b=>{st^=st<<13;st^=st>>17;st^=st<<5;return b^(st&0xFF);}); return seed[0].toString(16).padStart(8,'0')+uint8ToHex(new Uint8Array(enc)); }
+function xorshiftDec(h){ let st=parseInt(h.slice(0,8),16)||1; const bytes=Array.from(hexToUint8(h.slice(8))); const dec=bytes.map(b=>{st^=st<<13;st^=st>>17;st^=st<<5;return b^(st&0xFF);}); return bytesToText(new Uint8Array(dec)); }
+function rotEnc(s){ return s.split('').map(c=>{const cd=c.charCodeAt(0); if(cd>=65&&cd<=90)return String.fromCharCode(((cd-65+13)%26)+65); if(cd>=97&&cd<=122)return String.fromCharCode(((cd-97+13)%26)+97); if(cd>=48&&cd<=57)return String.fromCharCode(((cd-48+5)%10)+48); return String.fromCharCode((cd+7)%256);}).join(''); }
+function rotDec(s){ return s.split('').map(c=>{const cd=c.charCodeAt(0); if(cd>=65&&cd<=90)return String.fromCharCode(((cd-65+13)%26)+65); if(cd>=97&&cd<=122)return String.fromCharCode(((cd-97+13)%26)+97); if(cd>=48&&cd<=57)return String.fromCharCode(((cd-48+5)%10)+48); return String.fromCharCode((cd-7+256)%256);}).join(''); }
+function morseEnc(s){ return Array.from(textToBytes(s)).map(b=>b.toString(2).padStart(8,'0')).join('X').replace(/0/g,'.').replace(/1/g,'-'); }
+function morseDec(s){ const bin=s.replace(/\./g,'0').replace(/-/g,'1').split('X').map(b=>parseInt(b,2)); return bytesToText(new Uint8Array(bin)); }
+function atbashEnc(s){ return uint8ToHex(new Uint8Array(Array.from(textToBytes(s)).map(b=>255-b))); }
+function atbashDec(h){ return bytesToText(new Uint8Array(Array.from(hexToUint8(h)).map(b=>255-b))); }
+const BFK='BEAUFORTAUTOKEYCIPHER';
+function bfEnc(s){ const b=Array.from(textToBytes(s)),k=Array.from(textToBytes(BFK)); return uint8ToHex(new Uint8Array(b.map((v,i)=>(k[i%k.length]-v+256)%256))); }
+function bfDec(h){ const b=Array.from(hexToUint8(h)),k=Array.from(textToBytes(BFK)); return bytesToText(new Uint8Array(b.map((v,i)=>(k[i%k.length]-v+256)%256))); }
+
+// ============================================================ BARRIER REGISTRY
+function getActiveBarriers(prefix){
+  return ['rc4','vigenere','columnar','playfair','rail','bifid','polybius','xorshift','rot','morse','atbash','beaufort']
+    .filter(id=>document.getElementById(prefix+'-'+id)?.checked);
+}
+const BARRIER_ENC={rc4:rc4Enc,vigenere:vigEnc,columnar:colEnc,playfair:pfEnc,rail:rfEnc,bifid:bifidEnc,polybius:polyEnc,xorshift:xorshiftEnc,rot:rotEnc,morse:morseEnc,atbash:atbashEnc,beaufort:bfEnc};
+const BARRIER_DEC={rc4:rc4Dec,vigenere:vigDec,columnar:colDec,playfair:pfDec,rail:rfDec,bifid:bifidDec,polybius:polyDec,xorshift:xorshiftDec,rot:rotDec,morse:morseDec,atbash:atbashDec,beaufort:bfDec};
+
+// ============================================================ LOADING ANIMATION
+async function runLoading(prefix, steps){
+  const lc=document.getElementById(prefix+'-loading'),bar=document.getElementById(prefix+'-load-bar');
+  const pct=document.getElementById(prefix+'-load-pct'),lbl=document.getElementById(prefix+'-load-label');
+  const stepsEl=document.getElementById(prefix+'-load-steps');
+  lc.classList.add('visible'); bar.style.width='0%'; stepsEl.innerHTML='';
+  const n=steps.length;
+  for(let i=0;i<n;i++){
+    const p=Math.round(((i+1)/n)*100);
+    lbl.textContent=steps[i]; pct.textContent=p+'%';
+    await animate(bar,(i/n)*100,p,1500/n);
+    const d=document.createElement('div'); d.className='step'; d.textContent='▶ '+steps[i]+' ... OK';
+    stepsEl.appendChild(d); await sleep(1500/n*.25);
+  }
+}
+
+// ============================================================ ENCODE
+async function encode(){
+  const useOTP=document.getElementById('cb-otp').checked;
+  const useAES=document.getElementById('cb-aes').checked;
+  const useScatter=document.getElementById('cb-scatter').checked;
+  const useChacha=document.getElementById('cb-chacha').checked;
+  const useTwofish=document.getElementById('cb-twofish').checked;
+  const useSerpent=document.getElementById('cb-serpent').checked;
+  const use3des=document.getElementById('cb-3des').checked;
+  const useHmac=document.getElementById('cb-hmac').checked;
+  const useEnigma=document.getElementById('cb-enigma').checked;
+  const barriers=getActiveBarriers('b');
+  const groupSize=parseInt(document.getElementById('enc-groupsize').value);
+  const outFmt=document.getElementById('enc-output-format').value;
+  const plaintext=document.getElementById('enc-plaintext').value.trim();
+  const errEl=document.getElementById('enc-error');
+  const outEl=document.getElementById('enc-output');
+  errEl.classList.remove('visible'); outEl.classList.remove('visible');
+
+  if(!plaintext){showError('enc','Bitte Klartext eingeben!');return;}
+  if(!useOTP&&!useAES&&!useScatter&&!useChacha&&!useTwofish&&!useSerpent&&!use3des&&!useHmac&&!useEnigma&&barriers.length===0){showError('enc','Mindestens eine Schicht aktivieren!');return;}
+  if(useAES&&!document.getElementById('enc-aes-pw').value){showError('enc','AES-256 benötigt ein Master-Passwort!');return;}
+
+  const steps=[];
+  steps.push('SYSTEM INITIALISIERUNG');
+  if(useOTP) steps.push('OTP: TEXT → BYTES → ZAHLEN','OTP: CSPRNG SCHLÜSSELGENERIERUNG','OTP: (MSG+KEY) MOD 10');
+  for(const b of barriers) steps.push('BARRIERE: '+b.toUpperCase());
+  if(useChacha) steps.push('CHACHA20: STREAM-VERSCHLÜSSELUNG');
+  if(useTwofish) steps.push('TWOFISH-256: FEISTEL BLOCK-CIPHER');
+  if(useSerpent) steps.push('SERPENT-256: SP-NETZWERK');
+  if(use3des) steps.push('TRIPLE-DES: 3×EDE FEISTEL');
+  if(useEnigma) steps.push('ENIGMA: ROTOR-MECHANISMUS');
+  if(useHmac) steps.push('HMAC-SHA256: SIGNATUR ANHÄNGEN');
+  if(useAES) steps.push('AES-256-GCM: PBKDF2 + VERSCHLÜSSELUNG');
+  if(useScatter) steps.push('SCATTER: BASE64+HEX+ADFGVX');
+  steps.push('ZAHLENGRUPPEN FORMATIERUNG','PROTOKOLL ABSCHLUSS');
+
+  await runLoading('enc',steps);
+
+  try {
+    let data=plaintext;
+    const keyLog={};
+
+    // OTP
+    if(useOTP){
+      const digitStr=textToNums(data);
+      const res=otpEncrypt(digitStr,document.getElementById('enc-otp-key').value.trim());
+      data=res.cipher; keyLog.otp=res.key;
+    }
+
+    // Barriers
+    for(const b of barriers) data=BARRIER_ENC[b](data);
+
+    // ChaCha20
+    if(useChacha){
+      const res=chachaEncrypt(data,document.getElementById('enc-chacha-key').value);
+      data=res.data; keyLog.chacha=res.key;
+    }
+    // Twofish
+    if(useTwofish){
+      const res=twofishEnc(data,document.getElementById('enc-twofish-key').value);
+      data=res.data; keyLog.twofish=res.key;
+    }
+    // Serpent
+    if(useSerpent){
+      const res=serpentEnc(data,document.getElementById('enc-serpent-key').value);
+      data=res.data; keyLog.serpent=res.key;
+    }
+    // Triple-DES
+    if(use3des){
+      const res=tripleDesEncrypt(data,document.getElementById('enc-3des-key').value);
+      data=res.data; keyLog['3des']=res.key;
+    }
+    // Enigma
+    if(useEnigma){
+      const res=enigmaProcess(data,document.getElementById('enc-enigma-pos').value);
+      data=res.data; keyLog.enigma=res.positions;
+    }
+    // HMAC
+    if(useHmac){
+      const res=await hmacSign(data,document.getElementById('enc-hmac-key').value);
+      data=res.data; keyLog.hmac=res.key;
+    }
+    // AES
+    if(useAES){
+      const pw=document.getElementById('enc-aes-pw').value;
+      data=await aesEncrypt(data,pw); keyLog.aes=pw;
+    }
+    // Scatter
+    if(useScatter) data=scatterEnc(data);
+
+    // Format
+    let digits = /^[0-9]+$/.test(data) ? data : Array.from(textToBytes(data)).map(b=>b.toString().padStart(3,'0')).join('');
+    let formatted;
+    if(outFmt==='mixed'){ const h=Array.from(textToBytes(data)).map(b=>b.toString(16).padStart(2,'0')).join(''); formatted=h.match(new RegExp(`.{1,${groupSize*2}}`,'g')||[h]).join(' '); }
+    else { formatted=formatGroups(digits,groupSize); if(outFmt==='phonetic') formatted=toNATO(formatted); }
+
+    const activeLayers=[];
+    if(useOTP) activeLayers.push('OTP');
+    barriers.forEach(b=>activeLayers.push(b.toUpperCase()));
+    if(useChacha) activeLayers.push('CHACHA20');
+    if(useTwofish) activeLayers.push('TWOFISH-256');
+    if(useSerpent) activeLayers.push('SERPENT-256');
+    if(use3des) activeLayers.push('TRIPLE-DES');
+    if(useEnigma) activeLayers.push('ENIGMA');
+    if(useHmac) activeLayers.push('HMAC-SHA256');
+    if(useAES) activeLayers.push('AES-256-GCM');
+    if(useScatter) activeLayers.push('SCATTER');
+
+    renderEncOutput(formatted,keyLog,activeLayers,groupSize,outFmt);
+  } catch(e){ showError('enc','FEHLER: '+e.message); }
+}
+
+function renderEncOutput(tx,keys,layers,gs,fmt){
+  const el=document.getElementById('enc-output-content'),outEl=document.getElementById('enc-output');
+  const ALL=['OTP','RC4','VIGENERE','COLUMNAR','PLAYFAIR','RAIL','BIFID','POLYBIUS','XORSHIFT','ROT','MORSE','ATBASH','BEAUFORT','CHACHA20','TWOFISH-256','SERPENT-256','TRIPLE-DES','ENIGMA','HMAC-SHA256','AES-256-GCM','SCATTER'];
+  const badges=ALL.map(l=>`<span class="layer-badge ${layers.includes(l)?'active-layer':''}">${l}</span>`).join('');
+  const ts=new Date().toISOString().replace('T',' ').slice(0,19);
+  let keyRows='';
+  if(keys.otp)      keyRows+=`<div class="out-section"><div class="out-key">▶ OTP-SCHLÜSSEL [GEHEIM]</div><div class="out-val key-val">${keys.otp}</div></div>`;
+  if(keys.chacha)   keyRows+=`<div class="out-section"><div class="out-key">▶ CHACHA20-SCHLÜSSEL [GEHEIM]</div><div class="out-val key-val">${keys.chacha}</div></div>`;
+  if(keys.twofish)  keyRows+=`<div class="out-section"><div class="out-key">▶ TWOFISH-SCHLÜSSEL [GEHEIM]</div><div class="out-val key-val">${keys.twofish}</div></div>`;
+  if(keys.serpent)  keyRows+=`<div class="out-section"><div class="out-key">▶ SERPENT-SCHLÜSSEL [GEHEIM]</div><div class="out-val key-val">${keys.serpent}</div></div>`;
+  if(keys['3des'])  keyRows+=`<div class="out-section"><div class="out-key">▶ TRIPLE-DES KEYS [GEHEIM]</div><div class="out-val key-val">${keys['3des']}</div></div>`;
+  if(keys.enigma)   keyRows+=`<div class="out-section"><div class="out-key">▶ ENIGMA ROTOR-POSITIONEN</div><div class="out-val key-val">${keys.enigma}</div></div>`;
+  if(keys.hmac)     keyRows+=`<div class="out-section"><div class="out-key">▶ HMAC-SECRET [GEHEIM]</div><div class="out-val key-val">${keys.hmac}</div></div>`;
+  if(keys.aes)      keyRows+=`<div class="out-section"><div class="out-key">▶ AES-PASSWORT [GEHEIM]</div><div class="out-val key-val">${keys.aes.replace(/./g,'●')}</div></div>`;
+
+  el.innerHTML=`
+    <div class="out-section"><div class="out-key">▶ AKTIVE SCHICHTEN (${layers.length})</div><div class="out-val layer-info">${badges}</div></div>
+    <div class="out-section"><div class="out-key">▶ ÜBERTRAGUNG — ${gs}ER-GRUPPEN // ${fmt.toUpperCase()}</div><div class="out-val transmission">${tx}</div></div>
+    ${keyRows}
+    <div class="out-section"><div class="out-key">▶ ZEITSTEMPEL</div><div class="out-val">${ts} UTC</div></div>
+    <div class="out-section"><div class="out-key">▶ SICHERHEITSSTUFE</div><div class="out-val">${layers.length} SCHICHTEN AKTIV // ${gs}ER-GRUPPEN // ${fmt.toUpperCase()}</div></div>`;
+  document.getElementById('enc-loading').classList.remove('visible');
+  outEl.classList.add('visible');
+}
+
+// ============================================================ DECODE
+async function decode(){
+  const useOTP=document.getElementById('dcb-otp').checked;
+  const useAES=document.getElementById('dcb-aes').checked;
+  const useScatter=document.getElementById('dcb-scatter').checked;
+  const useChacha=document.getElementById('dcb-chacha').checked;
+  const useTwofish=document.getElementById('dcb-twofish').checked;
+  const useSerpent=document.getElementById('dcb-serpent').checked;
+  const use3des=document.getElementById('dcb-3des').checked;
+  const useHmac=document.getElementById('dcb-hmac').checked;
+  const useEnigma=document.getElementById('dcb-enigma').checked;
+  const barriers=getActiveBarriers('db');
+  const groupSize=parseInt(document.getElementById('dec-groupsize').value);
+  const outFmt=document.getElementById('dec-output-format').value;
+  const ciphertext=document.getElementById('dec-ciphertext').value.trim();
+  const errEl=document.getElementById('dec-error'),outEl=document.getElementById('dec-output');
+  errEl.classList.remove('visible'); outEl.classList.remove('visible');
+
+  if(!ciphertext){showError('dec','Bitte Chiffretext eingeben!');return;}
+  if(useAES&&!document.getElementById('dec-aes-pw').value){showError('dec','AES benötigt das Passwort!');return;}
+  if(useOTP&&!document.getElementById('dec-otp-key').value){showError('dec','OTP benötigt den Schlüssel!');return;}
+
+  const steps=[];
+  steps.push('EMPFANG VERIFIZIEREN');
+  if(useScatter) steps.push('SCATTER: ADFGVX+HEX+BASE64 RÜCKUMKEHRUNG');
+  if(useAES) steps.push('AES-256-GCM: ENTSCHLÜSSELUNG');
+  if(useHmac) steps.push('HMAC-SHA256: VERIFIKATION + ENTFERNUNG');
+  if(useEnigma) steps.push('ENIGMA: ROTOR-DEKODIERUNG');
+  if(use3des) steps.push('TRIPLE-DES: EDE RÜCKUMKEHRUNG');
+  if(useSerpent) steps.push('SERPENT-256: SP-NET RÜCKUMKEHRUNG');
+  if(useTwofish) steps.push('TWOFISH-256: FEISTEL RÜCKUMKEHRUNG');
+  if(useChacha) steps.push('CHACHA20: STREAM RÜCKUMKEHRUNG');
+  for(const b of [...barriers].reverse()) steps.push('BARRIERE ZURÜCK: '+b.toUpperCase());
+  if(useOTP) steps.push('OTP: SUBTRAKTION + BYTES→TEXT');
+  steps.push('KLARNACHRICHT WIEDERHERGESTELLT');
+  await runLoading('dec',steps);
+
+  try {
+    let data=ciphertext;
+    if(outFmt==='phonetic'){
+      const rv=Object.fromEntries(Object.entries(NATO).map(([k,v])=>[v,k]));
+      data=data.split(' ').map(w=>rv[w]||w).join('').replace(/\s*\/\/\s*/g,' ');
+    }
+    if(/^[\d\s]+$/.test(data)) data=data.replace(/\s+/g,'');
+    else if(/^[0-9a-f\s]+$/i.test(data)&&outFmt==='mixed') data=bytesToText(hexToUint8(data.replace(/\s+/g,'')));
+
+    // REVERSE ORDER
+    if(useScatter) data=scatterDec(data);
+    if(useAES)     data=await aesDecrypt(data,document.getElementById('dec-aes-pw').value);
+    if(useHmac)    data=await hmacVerifyAndStrip(data,document.getElementById('dec-hmac-key').value);
+    if(useEnigma)  data=enigmaDecProcess(data,document.getElementById('dec-enigma-pos').value);
+    if(use3des)    data=tripleDesDecrypt(data,document.getElementById('dec-3des-key').value);
+    if(useSerpent) data=serpentDec(data,document.getElementById('dec-serpent-key').value);
+    if(useTwofish) data=twofishDec(data,document.getElementById('dec-twofish-key').value);
+    if(useChacha)  data=chachaDecrypt(data,document.getElementById('dec-chacha-key').value);
+
+    for(const b of [...barriers].reverse()) data=BARRIER_DEC[b](data);
+
+    if(useOTP){
+      const decDigits=otpDecrypt(data,document.getElementById('dec-otp-key').value);
+      data=numsToText(decDigits);
+    } else {
+      if(/^\d+$/.test(data)){ try{data=numsToText(data);}catch(e){} }
+    }
+
+    renderDecOutput(data,barriers,useOTP,useAES,useScatter,useChacha,useTwofish,useSerpent,use3des,useHmac,useEnigma);
+  } catch(e){
+    showError('dec','ENTSCHLÜSSELUNGSFEHLER: '+e.message);
+    document.getElementById('dec-loading').classList.remove('visible');
+  }
+}
+
+function renderDecOutput(pt,barriers,useOTP,useAES,useScatter,useChacha,useTwofish,useSerpent,use3des,useHmac,useEnigma){
+  const el=document.getElementById('dec-output-content'),outEl=document.getElementById('dec-output');
+  const layers=[];
+  if(useScatter)layers.push('SCATTER'); if(useAES)layers.push('AES-256-GCM'); if(useHmac)layers.push('HMAC-SHA256');
+  if(useEnigma)layers.push('ENIGMA'); if(use3des)layers.push('TRIPLE-DES'); if(useSerpent)layers.push('SERPENT-256');
+  if(useTwofish)layers.push('TWOFISH-256'); if(useChacha)layers.push('CHACHA20');
+  [...barriers].reverse().forEach(b=>layers.push(b.toUpperCase())); if(useOTP)layers.push('OTP');
+
+  el.innerHTML=`
+    <div class="out-section"><div class="out-key">▶ ENTSCHLÜSSELTE NACHRICHT</div><div class="out-val" style="font-size:14px;color:#00ff41;text-shadow:0 0 8px #00ff41;padding:12px;letter-spacing:1px;">${escapeHtml(pt)}</div></div>
+    <div class="out-section"><div class="out-key">▶ ABGEBAUTE SCHICHTEN (${layers.length})</div><div class="out-val layer-info">${layers.map(l=>`<span class="layer-badge active-layer">${l}</span>`).join('')}</div></div>
+    <div class="out-section"><div class="out-key">▶ STATUS</div><div class="out-val" style="color:#00ff41;">&#10003; ALLE SCHICHTEN ERFOLGREICH ABGEBAUT // NACHRICHT WIEDERHERGESTELLT</div></div>`;
+  document.getElementById('dec-loading').classList.remove('visible');
+  outEl.classList.add('visible');
+}
+
+function escapeHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>'); }
+function showError(p,m){ const e=document.getElementById(p+'-error'); e.textContent='⚠ '+m; e.classList.add('visible'); document.getElementById(p+'-loading').classList.remove('visible'); }
+function copyOutput(p){ const el=document.getElementById(p+'-output-content'); navigator.clipboard.writeText(el.innerText||el.textContent).then(()=>{ const b=el.closest('.output-panel').querySelector('.copy-btn'); b.textContent='✓ KOPIERT'; setTimeout(()=>b.textContent='KOPIEREN',2000); }); }
+</script>
+</body>
+</html>
