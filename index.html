@@ -516,7 +516,7 @@ select option { background:#000; color:var(--green); }
             <div class="module-top">
               <span class="module-number">01</span>
               <input type="checkbox" id="cb-otp" checked>
-              <label class="check-box" for="cb-otp" onclick="e=event;e.stopPropagation()">&#10003;</label>
+              <label class="check-box" for="cb-otp" onclick="event.stopPropagation()">&#10003;</label>
               <div class="module-info">
                 <div class="module-name">ONE-TIME-PAD (OTP)</div>
                 <div class="module-desc">Mathematisch unknackbar · (Msg+Key) mod 10 · CSPRNG-Schlüssel</div>
@@ -533,7 +533,7 @@ select option { background:#000; color:var(--green); }
             <div class="module-top">
               <span class="module-number">02</span>
               <input type="checkbox" id="cb-aes">
-              <label class="check-box" for="cb-aes" onclick="e=event;e.stopPropagation()"></label>
+              <label class="check-box" for="cb-aes" onclick="event.stopPropagation()"></label>
               <div class="module-info">
                 <div class="module-name">MILITÄR AES-256-GCM</div>
                 <div class="module-desc">Web Crypto API · PBKDF2 310k Iter · 256-Bit · GCM-Authentifizierung</div>
@@ -550,7 +550,7 @@ select option { background:#000; color:var(--green); }
             <div class="module-top">
               <span class="module-number">03</span>
               <input type="checkbox" id="cb-scatter">
-              <label class="check-box" for="cb-scatter" onclick="e=event;e.stopPropagation()"></label>
+              <label class="check-box" for="cb-scatter" onclick="event.stopPropagation()"></label>
               <div class="module-info">
                 <div class="module-name">KRYPTO-STREUUNG</div>
                 <div class="module-desc">Base64 + Hex + ADFGVX-Matrix · Triple-Obfuskation</div>
@@ -577,7 +577,7 @@ select option { background:#000; color:var(--green); }
             <div class="module-top">
               <span class="module-number">04</span>
               <input type="checkbox" id="cb-chacha">
-              <label class="check-box" for="cb-chacha" onclick="e=event;e.stopPropagation()"></label>
+              <label class="check-box" for="cb-chacha" onclick="event.stopPropagation()"></label>
               <div class="module-info">
                 <div class="module-name">CHACHA20-STREAM</div>
                 <div class="module-desc">Salsa20-Ableitung · 256-Bit Key · 64-Bit Nonce · Byte-Stream-XOR</div>
@@ -594,7 +594,7 @@ select option { background:#000; color:var(--green); }
             <div class="module-top">
               <span class="module-number">05</span>
               <input type="checkbox" id="cb-twofish">
-              <label class="check-box" for="cb-twofish" onclick="e=event;e.stopPropagation()"></label>
+              <label class="check-box" for="cb-twofish" onclick="event.stopPropagation()"></label>
               <div class="module-info">
                 <div class="module-name">TWOFISH-256 (EMULATION)</div>
                 <div class="module-desc">MDS-Matrix · PHT · Feistel-Netzwerk 16 Runden · 256-Bit</div>
@@ -611,7 +611,7 @@ select option { background:#000; color:var(--green); }
             <div class="module-top">
               <span class="module-number">06</span>
               <input type="checkbox" id="cb-serpent">
-              <label class="check-box" for="cb-serpent" onclick="e=event;e.stopPropagation()"></label>
+              <label class="check-box" for="cb-serpent" onclick="event.stopPropagation()"></label>
               <div class="module-info">
                 <div class="module-name">SERPENT-256 (EMULATION)</div>
                 <div class="module-desc">32 Runden · 8 S-Boxen · SP-Netzwerk · AES-Finalist</div>
@@ -642,7 +642,7 @@ select option { background:#000; color:var(--green); }
             <div class="module-top">
               <span class="module-number">07</span>
               <input type="checkbox" id="cb-3des">
-              <label class="check-box" for="cb-3des" onclick="e=event;e.stopPropagation()"></label>
+              <label class="check-box" for="cb-3des" onclick="event.stopPropagation()"></label>
               <div class="module-info">
                 <div class="module-name">TRIPLE-DES 3×EDE</div>
                 <div class="module-desc">3×56-Bit Keys · Encrypt-Decrypt-Encrypt · Feistel 16+16+16 Runden</div>
@@ -659,7 +659,7 @@ select option { background:#000; color:var(--green); }
             <div class="module-top">
               <span class="module-number">08</span>
               <input type="checkbox" id="cb-hmac">
-              <label class="check-box" for="cb-hmac" onclick="e=event;e.stopPropagation()"></label>
+              <label class="check-box" for="cb-hmac" onclick="event.stopPropagation()"></label>
               <div class="module-info">
                 <div class="module-name">HMAC-SHA256 INTEGRITÄT</div>
                 <div class="module-desc">Web Crypto API · SHA-256 HMAC · Authentifizierung + Manipulation-Schutz</div>
@@ -676,7 +676,7 @@ select option { background:#000; color:var(--green); }
             <div class="module-top">
               <span class="module-number">09</span>
               <input type="checkbox" id="cb-enigma">
-              <label class="check-box" for="cb-enigma" onclick="e=event;e.stopPropagation()"></label>
+              <label class="check-box" for="cb-enigma" onclick="event.stopPropagation()"></label>
               <div class="module-info">
                 <div class="module-name">ENIGMA-EMULATION</div>
                 <div class="module-desc">3 Rotoren · Reflektor · Plugboard · Stepping-Mechanismus</div>
@@ -811,7 +811,7 @@ select option { background:#000; color:var(--green); }
             <div class="module-top">
               <span class="module-number">01</span>
               <input type="checkbox" id="dcb-otp" checked>
-              <label class="check-box" for="dcb-otp" onclick="e=event;e.stopPropagation()">&#10003;</label>
+              <label class="check-box" for="dcb-otp" onclick="event.stopPropagation()">&#10003;</label>
               <div class="module-info">
                 <div class="module-name">ONE-TIME-PAD (OTP)</div>
                 <div class="module-desc">OTP-Schlüssel vom Encoder eingeben</div>
@@ -826,7 +826,7 @@ select option { background:#000; color:var(--green); }
             <div class="module-top">
               <span class="module-number">02</span>
               <input type="checkbox" id="dcb-aes">
-              <label class="check-box" for="dcb-aes" onclick="e=event;e.stopPropagation()"></label>
+              <label class="check-box" for="dcb-aes" onclick="event.stopPropagation()"></label>
               <div class="module-info">
                 <div class="module-name">MILITÄR AES-256-GCM</div>
                 <div class="module-desc">Dasselbe Master-Passwort vom Encoder</div>
@@ -842,7 +842,7 @@ select option { background:#000; color:var(--green); }
             <div class="module-top">
               <span class="module-number">03</span>
               <input type="checkbox" id="dcb-scatter">
-              <label class="check-box" for="dcb-scatter" onclick="e=event;e.stopPropagation()"></label>
+              <label class="check-box" for="dcb-scatter" onclick="event.stopPropagation()"></label>
               <div class="module-info">
                 <div class="module-name">KRYPTO-STREUUNG</div>
                 <div class="module-desc">ADFGVX + Hex + Base64 Rückumkehrung</div>
@@ -867,7 +867,7 @@ select option { background:#000; color:var(--green); }
             <div class="module-top">
               <span class="module-number">04</span>
               <input type="checkbox" id="dcb-chacha">
-              <label class="check-box" for="dcb-chacha" onclick="e=event;e.stopPropagation()"></label>
+              <label class="check-box" for="dcb-chacha" onclick="event.stopPropagation()"></label>
               <div class="module-info">
                 <div class="module-name">CHACHA20-STREAM</div>
                 <div class="module-desc">Schlüssel vom Encoder-Protokoll</div>
@@ -883,7 +883,7 @@ select option { background:#000; color:var(--green); }
             <div class="module-top">
               <span class="module-number">05</span>
               <input type="checkbox" id="dcb-twofish">
-              <label class="check-box" for="dcb-twofish" onclick="e=event;e.stopPropagation()"></label>
+              <label class="check-box" for="dcb-twofish" onclick="event.stopPropagation()"></label>
               <div class="module-info">
                 <div class="module-name">TWOFISH-256</div>
                 <div class="module-desc">Schlüssel vom Encoder-Protokoll</div>
@@ -899,7 +899,7 @@ select option { background:#000; color:var(--green); }
             <div class="module-top">
               <span class="module-number">06</span>
               <input type="checkbox" id="dcb-serpent">
-              <label class="check-box" for="dcb-serpent" onclick="e=event;e.stopPropagation()"></label>
+              <label class="check-box" for="dcb-serpent" onclick="event.stopPropagation()"></label>
               <div class="module-info">
                 <div class="module-name">SERPENT-256</div>
                 <div class="module-desc">Schlüssel vom Encoder-Protokoll</div>
@@ -929,7 +929,7 @@ select option { background:#000; color:var(--green); }
             <div class="module-top">
               <span class="module-number">07</span>
               <input type="checkbox" id="dcb-3des">
-              <label class="check-box" for="dcb-3des" onclick="e=event;e.stopPropagation()"></label>
+              <label class="check-box" for="dcb-3des" onclick="event.stopPropagation()"></label>
               <div class="module-info">
                 <div class="module-name">TRIPLE-DES 3×EDE</div>
                 <div class="module-desc">3-Key EDE Rückumkehrung</div>
@@ -945,7 +945,7 @@ select option { background:#000; color:var(--green); }
             <div class="module-top">
               <span class="module-number">08</span>
               <input type="checkbox" id="dcb-hmac">
-              <label class="check-box" for="dcb-hmac" onclick="e=event;e.stopPropagation()"></label>
+              <label class="check-box" for="dcb-hmac" onclick="event.stopPropagation()"></label>
               <div class="module-info">
                 <div class="module-name">HMAC-SHA256 INTEGRITÄT</div>
                 <div class="module-desc">Signatur-Verifikation + Entfernung</div>
@@ -961,7 +961,7 @@ select option { background:#000; color:var(--green); }
             <div class="module-top">
               <span class="module-number">09</span>
               <input type="checkbox" id="dcb-enigma">
-              <label class="check-box" for="dcb-enigma" onclick="e=event;e.stopPropagation()"></label>
+              <label class="check-box" for="dcb-enigma" onclick="event.stopPropagation()"></label>
               <div class="module-info">
                 <div class="module-name">ENIGMA-EMULATION</div>
                 <div class="module-desc">Rotor-Dekodierung (selbstinvers)</div>
@@ -1086,6 +1086,14 @@ select option { background:#000; color:var(--green); }
 })();
 
 // ============================================================ COLLAPSIBLE
+// Prevent clicks inside input fields from bubbling to module-card onclick
+document.addEventListener('click', function(e){
+  if(e.target.matches('input[type="text"], input[type="password"], textarea, select')){
+    const card = e.target.closest('.module-card');
+    if(card) e.stopPropagation();
+  }
+}, true);
+
 function toggleSection(secId, countId){
   document.getElementById(secId).classList.toggle('open');
 }
@@ -1146,6 +1154,7 @@ function toggleBarrier(el, cbId, countId){
   const cb = document.getElementById(cbId);
   if(cb) cb.checked = active;
   const check = el.querySelector('.barrier-check');
+  if(check) check.textContent = active ? '✓' : '';
   // update barrier count label
   const prefix = cbId.startsWith('db') ? 'db' : 'b';
   const side   = prefix === 'db' ? 'dec' : 'enc';
@@ -1566,6 +1575,9 @@ async function encode(){
       const digitStr=textToNums(data);
       const res=otpEncrypt(digitStr,document.getElementById('enc-otp-key').value.trim());
       data=res.cipher; keyLog.otp=res.key;
+      // Write auto-generated key back so user can see/copy it
+      const otpInput=document.getElementById('enc-otp-key');
+      if(otpInput) otpInput.value=res.key;
     }
 
     // Barriers
@@ -1575,31 +1587,37 @@ async function encode(){
     if(useChacha){
       const res=chachaEncrypt(data,document.getElementById('enc-chacha-key').value);
       data=res.data; keyLog.chacha=res.key;
+      document.getElementById('enc-chacha-key').value=res.key;
     }
     // Twofish
     if(useTwofish){
       const res=twofishEnc(data,document.getElementById('enc-twofish-key').value);
       data=res.data; keyLog.twofish=res.key;
+      document.getElementById('enc-twofish-key').value=res.key;
     }
     // Serpent
     if(useSerpent){
       const res=serpentEnc(data,document.getElementById('enc-serpent-key').value);
       data=res.data; keyLog.serpent=res.key;
+      document.getElementById('enc-serpent-key').value=res.key;
     }
     // Triple-DES
     if(use3des){
       const res=tripleDesEncrypt(data,document.getElementById('enc-3des-key').value);
       data=res.data; keyLog['3des']=res.key;
+      document.getElementById('enc-3des-key').value=res.key;
     }
     // Enigma
     if(useEnigma){
       const res=enigmaProcess(data,document.getElementById('enc-enigma-pos').value);
       data=res.data; keyLog.enigma=res.positions;
+      document.getElementById('enc-enigma-pos').value=res.positions;
     }
     // HMAC
     if(useHmac){
       const res=await hmacSign(data,document.getElementById('enc-hmac-key').value);
       data=res.data; keyLog.hmac=res.key;
+      document.getElementById('enc-hmac-key').value=res.key;
     }
     // AES
     if(useAES){
@@ -1612,7 +1630,7 @@ async function encode(){
     // Format
     let digits = /^[0-9]+$/.test(data) ? data : Array.from(textToBytes(data)).map(b=>b.toString().padStart(3,'0')).join('');
     let formatted;
-    if(outFmt==='mixed'){ const h=Array.from(textToBytes(data)).map(b=>b.toString(16).padStart(2,'0')).join(''); formatted=h.match(new RegExp(`.{1,${groupSize*2}}`,'g')||[h]).join(' '); }
+    if(outFmt==='mixed'){ const h=Array.from(textToBytes(data)).map(b=>b.toString(16).padStart(2,'0')).join(''); formatted=(h.match(new RegExp(`.{1,${groupSize*2}}`,'g'))||[h]).join(' '); }
     else { formatted=formatGroups(digits,groupSize); if(outFmt==='phonetic') formatted=toNATO(formatted); }
 
     const activeLayers=[];
@@ -1637,7 +1655,7 @@ function renderEncOutput(tx,keys,layers,gs,fmt){
   const badges=ALL.map(l=>`<span class="layer-badge ${layers.includes(l)?'active-layer':''}">${l}</span>`).join('');
   const ts=new Date().toISOString().replace('T',' ').slice(0,19);
   let keyRows='';
-  if(keys.otp)      keyRows+=`<div class="out-section"><div class="out-key">▶ OTP-SCHLÜSSEL [GEHEIM]</div><div class="out-val key-val">${keys.otp}</div></div>`;
+  if(keys.otp!==undefined) keyRows+=`<div class="out-section"><div class="out-key">▶ OTP-SCHLÜSSEL [GEHEIM]</div><div class="out-val key-val">${keys.otp}</div></div>`;
   if(keys.chacha)   keyRows+=`<div class="out-section"><div class="out-key">▶ CHACHA20-SCHLÜSSEL [GEHEIM]</div><div class="out-val key-val">${keys.chacha}</div></div>`;
   if(keys.twofish)  keyRows+=`<div class="out-section"><div class="out-key">▶ TWOFISH-SCHLÜSSEL [GEHEIM]</div><div class="out-val key-val">${keys.twofish}</div></div>`;
   if(keys.serpent)  keyRows+=`<div class="out-section"><div class="out-key">▶ SERPENT-SCHLÜSSEL [GEHEIM]</div><div class="out-val key-val">${keys.serpent}</div></div>`;
